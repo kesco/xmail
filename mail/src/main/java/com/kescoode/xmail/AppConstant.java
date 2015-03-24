@@ -7,12 +7,20 @@ package com.kescoode.xmail;
  */
 public final class AppConstant {
     private AppConstant() {
-        /* Empty */
+        throw new UnsupportedOperationException("Could not call the constructor");
+    }
+
+    public static class Event {
+        private Event() {
+            throw new UnsupportedOperationException("Could not call the constructor");
+        }
+
+        public static final String BROADCAST = "com.kescoode.xmail.action.EVENT";
     }
 
     public static class DB {
         private DB() {
-            /* Empty */
+            throw new UnsupportedOperationException("Could not call the constructor");
         }
 
         public static final String NAME = "xmail";

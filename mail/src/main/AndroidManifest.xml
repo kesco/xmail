@@ -1,43 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.kescoode.xmail">
+    package="com.kescoode.xmail">
 
     <application
-            android:name=".AppCtx"
-            android:allowBackup="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-        <activity
-                android:name=".ui.activity.HomeActivity"
-                android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+        android:name=".AppCtx"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
 
         <provider
-                android:name=".db.internal.DataProvider"
-                android:authorities="com.kescoode.xmail.action.DATA"
-                android:enabled="true"
-                android:exported="true"
-                android:process=":background">
-        </provider>
-
+            android:name=".db.internal.DataProvider"
+            android:authorities="com.kescoode.xmail.action.DATA"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":background"/>
+        <receiver
+            android:name=".receiver.MailEventReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kescoode.xmail.action.EVENT" />
+            </intent-filter>
+        </receiver>
         <service
-                android:name=".service.MailService"
-                android:enabled="true"
-                android:exported="true"
-                android:process=":background">
-        </service>
+            android:name=".service.MailService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":background"/>
         <service
-                android:name=".service.TimerService"
-                android:enabled="true"
-                android:exported="true"
-                android:process=":background">
-        </service>
+            android:name=".service.TimerService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":background"/>
+        <activity
+            android:name=".ui.activity.HomeActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.AccountActivity"
+            android:label="@string/title_activity_account"/>
     </application>
 
 </manifest>

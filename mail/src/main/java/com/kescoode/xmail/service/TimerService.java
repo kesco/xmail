@@ -4,8 +4,18 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+/**
+ * 定时任务Service
+ *
+ * @author Kesco Lin
+ */
 public class TimerService extends Service {
     public TimerService() {
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.kescoode.adk.log.CommonTrunk;
 import com.kescoode.adk.log.Logger;
+import com.kescoode.xmail.controller.MailManager;
 
 /**
  * App的{@link Application}
@@ -17,6 +18,7 @@ public class AppCtx extends Application {
         super.onCreate();
 
         Logger.appendTrunk(new CommonTrunk());
+
     }
 
 }

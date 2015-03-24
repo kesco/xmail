@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -53,4 +53,7 @@ dependencies {
 
     compile project(':mail-library')
     compile project(':adk')
+
+    compile 'com.jakewharton:butterknife:6.1.0'                 // View注入库
+    compile 'de.greenrobot:eventbus:2.4.0'                      // 事件总线库
 }

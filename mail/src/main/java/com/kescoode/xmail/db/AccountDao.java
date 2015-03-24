@@ -30,7 +30,7 @@ public class AccountDao extends DataDelegate {
      * @return 已登录的帐户数组
      */
     public Account[] getAllAccounts() {
-        Cursor cursor = select(parseUri(TABLE_NAME), "select * from account", new String[]{});
+        Cursor cursor = select(parseUri(TABLE_NAME), "select * from account");
         Account[] accounts = new Account[cursor.getCount()];
         if (accounts.length != 0 && cursor.moveToFirst()) {
             for (int i = 0; i < accounts.length; i++) {
@@ -51,4 +51,5 @@ public class AccountDao extends DataDelegate {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         /* 目前还是初版，没有升级数据库逻辑 */
     }
+
 }
