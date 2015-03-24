@@ -6,11 +6,15 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Looper;
 import android.util.SparseArray;
+
 import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.AppConstant.DB;
 import com.kescoode.xmail.AppCtx;
 import com.kescoode.xmail.db.*;
+
+import java.net.URI;
 
 
 public class DataProvider extends ContentProvider {
@@ -60,7 +64,6 @@ public class DataProvider extends ContentProvider {
         TABLES.append(NUM_DIR_FOLDER, FolderDao.TABLE_NAME);
     }
 
-    private final Context context = AppCtx.getContext();
     private DBManager DBManager;
 
     public DataProvider() {
@@ -68,8 +71,14 @@ public class DataProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        Logger.e(uri.toString());
-        return 0;
+        int n = URI_MATCHER.match(uri);
+        String table = TABLES.get(n);
+        if (n % 2 != 0) {
+            throw new RuntimeException("The mime type get from the uri must be an even number");
+        }
+        int index = DBManager.getWritableDatabase().delete(table, selection, selectionArgs);
+        Logger.d("Uri: %s,\nReturn: %d", uri.toString(), index);
+        return index;
     }
 
     @Override
@@ -104,7 +113,7 @@ public class DataProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         /* 目前是单数据库，不排除以后会升级到多数据库 */
-        DBManager = new DBManager(context, DB.NAME, DB.VERSION);
+        DBManager = new DBManager(getContext(), DB.NAME, DB.VERSION);
 
         return true;
     }
@@ -112,15 +121,24 @@ public class DataProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        Logger.e(uri.toString());
-        return null;
+        int n = URI_MATCHER.match(uri);
+        String table = TABLES.get(n);
+        Logger.d("Uri: %s,\nTable: %s,\nSQL: %s", uri.toString(), table, selection);
+        /* 采用手写SQL */
+        return DBManager.getReadableDatabase().rawQuery(selection, selectionArgs);
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        Logger.e(uri.toString());
-        return 0;
+        int n = URI_MATCHER.match(uri);
+        String table = TABLES.get(n);
+        if (n % 2 != 0) {
+            throw new RuntimeException("The mime type get from the uri must be an even number");
+        }
+        int index = DBManager.getWritableDatabase().update(table, values, selection, selectionArgs);
+        Logger.d("Uri: %s,\nReturn: %d", uri.toString(), index);
+        return index;
     }
 
 }

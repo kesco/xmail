@@ -12,18 +12,11 @@ import com.kescoode.adk.log.Logger;
  */
 public class AppCtx extends Application {
 
-    private static Context mCtx;
-
     @Override
     public void onCreate() {
         super.onCreate();
 
-        mCtx = this;
         Logger.appendTrunk(new CommonTrunk());
-    }
-
-    public static Context getContext() {
-        return mCtx;
     }
 
 }

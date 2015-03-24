@@ -1,0 +1,38 @@
+[
+  {
+    "domain": "126.com",
+    "send_server": "smtp.126.com",
+    "send_port": 465,
+    "receive_server": "pop.126.com",
+    "receive_port": 995,
+    "use_ssl": true,
+    "use_suffix": false
+  },
+  {
+    "domain": "163.com",
+    "send_server": "smtp.163.com",
+    "send_port": 465,
+    "receive_server": "pop.163.com",
+    "receive_port": 995,
+    "use_ssl": true,
+    "use_suffix": false
+  },
+  {
+    "domain": "foxmail.com",
+    "send_server": "smtp.qq.com",
+    "send_port": 465,
+    "receive_server": "imap.qq.com",
+    "receive_port": 993,
+    "use_ssl": true,
+    "use_suffix": true
+  },
+  {
+    "domain": "qq.com",
+    "send_server": "smtp.qq.com",
+    "send_port": 465,
+    "receive_server": "imap.qq.com",
+    "receive_port": 993,
+    "use_ssl": true,
+    "use_suffix": true
+  }
+]
