@@ -1,8 +1,11 @@
 package com.kescoode.xmail.db;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import com.kescoode.xmail.db.internal.DataDelegate;
 import com.kescoode.xmail.db.table.AccountSchema;
@@ -40,6 +43,21 @@ public class AccountDao extends DataDelegate {
         }
         cursor.close();
         return accounts;
+    }
+
+    /**
+     * 把邮箱帐户存进数据库
+     *
+     * @param account 邮箱业务对象
+     * @return 插入之后的主键
+     */
+    public long insertAccount2Db(Account account) {
+        ContentValues values = new ContentValues();
+        values.put(AccountSchema.NAME, account.name);
+        values.put(AccountSchema.PASSWD, account.passwd);
+        values.put(AccountSchema.CONFIG_ID, account.configId);
+        Uri uri = context.getContentResolver().insert(parseUri(TABLE_NAME), values);
+        return ContentUris.parseId(uri);
     }
 
     @Override

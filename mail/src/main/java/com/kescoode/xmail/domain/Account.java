@@ -5,6 +5,10 @@ import android.database.Cursor;
 
 import com.fsck.k9.mail.NetworkType;
 import com.fsck.k9.mail.store.StoreConfig;
+import com.kescoode.xmail.db.EmailConfigDao;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 邮件帐户业务对象
@@ -12,85 +16,138 @@ import com.fsck.k9.mail.store.StoreConfig;
  * @author Kesco Lin
  */
 public class Account implements StoreConfig {
+    private static final String INBOX = "INBOX";
+    private static final String OUTBOX = "K9MAIL_INTERNAL_OUTBOX";
 
-    private final Context context;
+    public final String name;
+    public final String passwd;
+    public final int configId;
 
-    public Account(Context context) {
-        this.context = context;
-    }
+    private final String transportUri;
+    private final String storeUri;
+    private final Map<NetworkType, Boolean> compressionMap;
+    private volatile String inboxFolder;
+    private volatile String draftFolder = null;
+    private volatile String trashFolder = null;
+    private volatile String spamFolder = null;
+    private volatile String sentFolder = null;
+    private volatile String autoExpandFolder = null;
+    private int maximumAutoDownloadMessageSize = 32768;
 
     public Account(Context context, Cursor cursor) {
-        this.context = context;
+        // TODO: 目前默认所有连接方式都压缩，以后待功能稳定后，重构为可选择
+        compressionMap = new ConcurrentHashMap<>();
+        compressionMap.put(NetworkType.MOBILE, true);
+        compressionMap.put(NetworkType.OTHER, true);
+        compressionMap.put(NetworkType.WIFI, true);
+        /* 从K9源码来看，IMAP和POP3的收件箱名称都是一样的 */
+        inboxFolder = INBOX;
+        /* 读取数据库 */
+        name = cursor.getString(1);
+        passwd = cursor.getString(2);
+        configId = cursor.getInt(3);
+
+        // TODO: 这里应该可以用一条SQL语句搞定的，重构的时候试下
+        EmailConfigDao dao = new EmailConfigDao(context);
+        EmailConfig config = dao.selectConfigFromDB(configId);
+        String[] uris = config.getDefaultServerSettingUri(name, passwd);
+        transportUri = uris[0];
+        storeUri = uris[1];
+    }
+
+    public Account(Context context,String name,String passwd,int configId,EmailConfig config) {
+        // TODO: 目前默认所有连接方式都压缩，以后待功能稳定后，重构为可选择
+        this.compressionMap = new ConcurrentHashMap<>();
+        this.compressionMap.put(NetworkType.MOBILE, true);
+        this.compressionMap.put(NetworkType.OTHER, true);
+        this.compressionMap.put(NetworkType.WIFI, true);
+        /* 从K9源码来看，IMAP和POP3的收件箱名称都是一样的 */
+        this.inboxFolder = INBOX;
+
+        this.name = name;
+        this.passwd = passwd;
+        this.configId = configId;
+        String[] uris = config.getDefaultServerSettingUri(name, passwd);
+        this.transportUri = uris[0];
+        this.storeUri = uris[1];
     }
 
     @Override
     public String getStoreUri() {
-        return null;
+        return storeUri;
     }
 
     @Override
     public String getTransportUri() {
-        return null;
+        return transportUri;
     }
 
     @Override
     public boolean subscribedFoldersOnly() {
+        /* 从K-9源码来看，这里都为false */
         return false;
     }
 
     @Override
     public boolean useCompression(NetworkType type) {
-        return false;
+        Boolean useCompression = compressionMap.get(type);
+        if (useCompression == null) {
+            return true;
+        }
+
+        return useCompression;
     }
 
     @Override
     public String getInboxFolderName() {
-        return null;
+        return inboxFolder;
     }
 
     @Override
     public String getOutboxFolderName() {
-        return null;
+        return OUTBOX;
     }
 
     @Override
     public String getDraftsFolderName() {
-        return null;
+        /* 目前没有实现草稿箱部分，所以置为null，
+           而在K9库中，有影响的只有WebDav协议 */
+        return draftFolder;
     }
 
     @Override
     public void setDraftsFolderName(String name) {
-
+        draftFolder = name;
     }
 
     @Override
     public void setTrashFolderName(String name) {
-
+        trashFolder = name;
     }
 
     @Override
     public void setSpamFolderName(String name) {
-
+        spamFolder = name;
     }
 
     @Override
     public void setSentFolderName(String name) {
-
+        sentFolder = name;
     }
 
     @Override
     public void setAutoExpandFolderName(String name) {
-
+        autoExpandFolder = name;
     }
 
     @Override
     public void setInboxFolderName(String name) {
-
+        inboxFolder = name;
     }
 
     @Override
     public int getMaximumAutoDownloadMessageSize() {
-        return 0;
+        return maximumAutoDownloadMessageSize;
     }
 
     @Override
@@ -105,17 +162,17 @@ public class Account implements StoreConfig {
 
     @Override
     public boolean isPushPollOnConnect() {
-        return false;
+        return true;
     }
 
     @Override
     public int getDisplayCount() {
-        return 0;
+        return 25;
     }
 
     @Override
     public int getIdleRefreshMinutes() {
-        return 0;
+        return 24;
     }
 
 }
