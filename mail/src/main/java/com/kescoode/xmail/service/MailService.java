@@ -29,6 +29,11 @@ public class MailService extends CoreService {
             Account account = new Account(MailService.this, email, password, config);
             executor.execute(new SettingsCheckCommand(MailService.this, account));
         }
+
+        @Override
+        public void update(int accountId) throws RemoteException {
+
+        }
     };
 
     public ExecutorService executor;

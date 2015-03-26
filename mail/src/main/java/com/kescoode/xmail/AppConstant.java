@@ -10,6 +10,15 @@ public final class AppConstant {
         throw new UnsupportedOperationException("Could not call the constructor");
     }
 
+    public static class Email {
+        private Email() {
+            throw new UnsupportedOperationException("Could not call the constructor");
+        }
+
+        public static final String CONTENT_PATH = "content";
+        public static final String ATTACHMENT_PATH = "attachment";
+    }
+
     public static class Event {
         private Event() {
             throw new UnsupportedOperationException("Could not call the constructor");

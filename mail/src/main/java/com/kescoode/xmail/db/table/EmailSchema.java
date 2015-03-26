@@ -17,7 +17,8 @@ public class EmailSchema implements BaseColumns {
     public static final String IS_READ = "is_read";
     public static final String IS_FLAGGED = "is_flagged";
     public static final String IS_FORWARD = "is_forward";
-    public static final String PATH = "path";
+    public static final String TEXT_PATH = "text_path";
+    public static final String HTML_PATH = "html_path";
     public static final String PREVIEW = "preview";
     public static final String SUBJECT = "subject";
     public static final String UPDATE_TIME = "update_time";

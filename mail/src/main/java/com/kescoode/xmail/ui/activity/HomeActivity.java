@@ -70,6 +70,7 @@ public class HomeActivity extends ActionBarActivity {
             Intent intent = new Intent(this, AccountActivity.class);
             // TODO: 到时候要加入识别码
             startActivity(intent);
+            finish();
         }
     }
 

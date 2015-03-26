@@ -23,6 +23,7 @@ public class Account implements StoreConfig {
     private static final String OUTBOX = "K9MAIL_INTERNAL_OUTBOX";
 
     private final Context context;
+    private volatile long id = -1;
     public final String name;
     public final String passwd;
 
@@ -31,6 +32,7 @@ public class Account implements StoreConfig {
     private final String storeUri;
     private volatile Transport transport = null;
     private volatile RemoteStore remoteStore = null;
+    private final LocalStore loaclStore;
     private final Map<NetworkType, Boolean> compressionMap;
     private volatile String inboxFolder;
     private volatile String draftFolder = null;
@@ -49,7 +51,9 @@ public class Account implements StoreConfig {
         compressionMap.put(NetworkType.WIFI, true);
         /* 从K9源码来看，IMAP和POP3的收件箱名称都是一样的 */
         inboxFolder = INBOX;
+        this.loaclStore = new LocalStore(context, this);
         /* 读取数据库 */
+        id = cursor.getLong(0);
         name = cursor.getString(1);
         passwd = cursor.getString(2);
         int configId = cursor.getInt(3);
@@ -71,6 +75,7 @@ public class Account implements StoreConfig {
         this.compressionMap.put(NetworkType.WIFI, true);
         /* 从K9源码来看，IMAP和POP3的收件箱名称都是一样的 */
         this.inboxFolder = INBOX;
+        this.loaclStore = new LocalStore(context, this);
 
         this.name = name;
         this.passwd = passwd;
@@ -100,6 +105,18 @@ public class Account implements StoreConfig {
             }
         }
         return transport;
+    }
+
+    public LocalStore getLocalStore() {
+        return this.loaclStore;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public synchronized void setId(long id) {
+        this.id = id;
     }
 
     public synchronized long getConfigId() {

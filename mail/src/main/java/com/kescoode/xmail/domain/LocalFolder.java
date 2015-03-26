@@ -1,5 +1,8 @@
 package com.kescoode.xmail.domain;
 
+import android.content.Context;
+import android.database.Cursor;
+
 import com.fsck.k9.mail.*;
 
 import java.util.Date;
@@ -13,25 +16,54 @@ import java.util.Set;
  * @author Kesco Lin
  */
 public class LocalFolder extends Folder<LocalMail> {
+    private final Context context;
+    private final Account account;
+
+    private final String name;
+    private int totalCount;
+    private int unReadCount;
+    private int flaggedCount;
+    private volatile long updateTime;
+
+    public LocalFolder(Context context, Account account,Cursor cursor) {
+        this.context = context;
+        this.account = account;
+        this.name = cursor.getString(2);
+        this.totalCount = cursor.getInt(3);
+        this.unReadCount = cursor.getInt(4);
+        this.flaggedCount = cursor.getInt(5);
+        this.updateTime = cursor.getLong(6);
+    }
+
+    public LocalFolder(Context context, Account account, Folder remote) throws MessagingException {
+        this.context = context;
+        this.account = account;
+        this.name = remote.getName();
+        this.totalCount = remote.getMessageCount();
+        this.unReadCount = remote.getUnreadMessageCount();
+        this.flaggedCount = remote.getFlaggedMessageCount();
+        this.updateTime = remote.getLastUpdate();
+    }
 
     @Override
+
     public void open(int mode) throws MessagingException {
 
     }
 
     @Override
     public void close() {
-
+        /* Nothing. */
     }
 
     @Override
     public boolean isOpen() {
-        return false;
+        return true;
     }
 
     @Override
     public int getMode() {
-        return 0;
+        return OPEN_MODE_RW;
     }
 
     @Override
@@ -41,22 +73,22 @@ public class LocalFolder extends Folder<LocalMail> {
 
     @Override
     public boolean exists() throws MessagingException {
-        return false;
+        return true;
     }
 
     @Override
     public int getMessageCount() throws MessagingException {
-        return 0;
+        return totalCount;
     }
 
     @Override
     public int getUnreadMessageCount() throws MessagingException {
-        return 0;
+        return unReadCount;
     }
 
     @Override
     public int getFlaggedMessageCount() throws MessagingException {
-        return 0;
+        return flaggedCount;
     }
 
     @Override
@@ -111,7 +143,15 @@ public class LocalFolder extends Folder<LocalMail> {
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
+    @Deprecated
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public long getAccountId() {
+        return account.getId();
+    }
 }

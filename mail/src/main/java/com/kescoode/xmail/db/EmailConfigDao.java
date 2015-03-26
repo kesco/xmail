@@ -38,6 +38,7 @@ public class EmailConfigDao extends DataDelegate {
         if (cursor.getCount() == 0) {
             return null;
         } else {
+            cursor.moveToFirst();
             return new EmailConfig(cursor);
         }
     }

@@ -95,7 +95,12 @@ public class AccountActivity extends ActionBarActivity {
     }
 
     public void onEvent(SettingCheckEvent event) {
-        Logger.e("haha %s %s", String.valueOf(event.ok), event.type.name());
+        Logger.e("Login Event: %s %s", String.valueOf(event.ok), event.type.name());
+        if (event.type == SettingCheckEvent.Type.RECEIVE) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override

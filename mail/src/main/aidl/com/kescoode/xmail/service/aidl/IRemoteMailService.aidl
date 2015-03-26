@@ -10,4 +10,9 @@ interface IRemoteMailService {
      */
     void login(String email, String password);
 
+    /**
+     * 更新邮箱
+     */
+    void update(int accountId);
+
 }

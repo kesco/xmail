@@ -2,8 +2,11 @@ package com.kescoode.xmail.controller;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
+import com.kescoode.adk.log.Logger;
+import com.kescoode.xmail.AppConstant;
 import com.kescoode.xmail.db.AccountDao;
 import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.EmailConfig;
@@ -14,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -56,6 +60,27 @@ public class MailManager {
     }
 
     /**
+     * 初始化整个邮件系统
+     */
+    public void init() {
+        /* 创建需要的文件夹 */
+        File interalDir = context.getFilesDir();
+        Logger.d("Internal Directry: %s", interalDir.getAbsolutePath());
+        File contentDir = new File(interalDir, AppConstant.Email.CONTENT_PATH);
+        File attachDir = new File(interalDir, AppConstant.Email.ATTACHMENT_PATH);
+        if (!contentDir.exists()) {
+            if (!contentDir.mkdir()) {
+                throw new RuntimeException("Can make the content dir");
+            }
+        }
+        if (!attachDir.exists()) {
+            if (!attachDir.mkdir()) {
+                throw new RuntimeException("Can make the attachment dir");
+            }
+        }
+    }
+
+    /**
      * 把数据库内所有的邮箱帐户拉出来
      */
     public void dB2Account() {
@@ -75,6 +100,7 @@ public class MailManager {
 
     /**
      * 添加邮件帐户，这往往发生在
+     *
      * @param account
      */
     public void addAccount(Account account) {

@@ -58,7 +58,9 @@ public class AccountDao extends DataDelegate {
         values.put(AccountSchema.PASSWD, account.passwd);
         values.put(AccountSchema.CONFIG_ID, account.getConfigId());
         Uri uri = context.getContentResolver().insert(parseUri(TABLE_NAME), values);
-        return ContentUris.parseId(uri);
+        long id = ContentUris.parseId(uri);
+        account.setId(id);
+        return id;
     }
 
     @Override
