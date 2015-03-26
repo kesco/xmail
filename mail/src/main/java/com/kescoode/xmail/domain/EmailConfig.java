@@ -8,6 +8,7 @@ import com.fsck.k9.mail.ServerSettings;
 import com.fsck.k9.mail.Transport;
 import com.fsck.k9.mail.store.RemoteStore;
 import com.fsck.k9.mail.store.imap.ImapStore;
+import com.kescoode.xmail.tool.EmailUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,11 +25,13 @@ import java.util.Map;
  * @author Kesco Lin
  */
 public class EmailConfig {
+    private volatile long id = -1L;
     public final String domain;
     private final List<SettingRaw> raws;
 
     public EmailConfig(Cursor cursor) {
         int length = cursor.getCount();
+        id = cursor.getInt(0);
         domain = cursor.getString(1);
         raws = new ArrayList<>(length);
         if (cursor.moveToFirst()) {
@@ -70,7 +73,7 @@ public class EmailConfig {
     /**
      * 获取默认的Server Uri数组，可以用来反序列化成{@link ServerSettings}
      *
-     * @param user 用户邮箱
+     * @param user   用户邮箱
      * @param passwd 密码
      * @return Uri数组，第一个是发送服务器，第二个是接收服务器
      */
@@ -121,13 +124,13 @@ public class EmailConfig {
         String type = receive.getString("type");
         String server = receive.getString("server");
         int port = receive.getInt("port");
-        String security = receive.getString("ssl");
-        String email = suffix ? user : subDomain(user)[0];
+        String security = receive.getString("security");
+        String email = suffix ? user : EmailUtil.subDomain(user)[0];
         Map<String, String> extras = null;
 
         if (type.equals("IMAP")) {
             /* Imap做个默认处理 */
-            extras = new HashMap<String, String>();
+            extras = new HashMap<>();
             extras.put(ImapStore.ImapStoreSettings.AUTODETECT_NAMESPACE_KEY,
                     Boolean.toString(true));
             extras.put(ImapStore.ImapStoreSettings.PATH_PREFIX_KEY, "");
@@ -148,16 +151,20 @@ public class EmailConfig {
         String type = send.getString("type");
         String server = send.getString("server");
         int port = send.getInt("port");
-        String security = send.getString("ssl");
-        String email = suffix ? user : subDomain(user)[0];
+        String security = send.getString("security");
+        String email = suffix ? user : EmailUtil.subDomain(user)[0];
 
         /* AuthType目前都默认为普通密码，以后可能会添加多个选项 */
         return new ServerSettings(ServerSettings.Type.valueOf(type), server, port,
                 ConnectionSecurity.valueOf(security), AuthType.PLAIN, email, passwd, null);
     }
 
-    private String[] subDomain(String email) {
-        return email.split("@");
+    public synchronized void setId(long id) {
+        this.id = id;
+    }
+
+    public synchronized long getId() {
+        return id;
     }
 
     public static class SettingRaw {

@@ -9,8 +9,8 @@ import android.os.Parcelable;
  * @author Kesco Lin
  */
 public class SettingCheckEvent implements Parcelable {
-    public static enum Type {
-        SEND, RECEIVE
+    public enum Type {
+        SEND, RECEIVE, ALL
     }
 
     public final boolean ok;

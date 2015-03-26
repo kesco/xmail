@@ -55,7 +55,9 @@ public class EmailConfigDao extends DataDelegate {
         values.put(EmailConfigSchema.RECEIVE, raw.receive);
         values.put(EmailConfigSchema.USE_SUFFIX, raw.useSuffix);
         Uri uri = context.getContentResolver().insert(parseUri(TABLE_NAME), values);
-        return ContentUris.parseId(uri);
+        long id = ContentUris.parseId(uri);
+        config.setId(id);
+        return id;
     }
 
     @Override

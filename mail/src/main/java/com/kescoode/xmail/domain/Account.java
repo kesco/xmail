@@ -3,7 +3,10 @@ package com.kescoode.xmail.domain;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.fsck.k9.mail.MessagingException;
 import com.fsck.k9.mail.NetworkType;
+import com.fsck.k9.mail.Transport;
+import com.fsck.k9.mail.store.RemoteStore;
 import com.fsck.k9.mail.store.StoreConfig;
 import com.kescoode.xmail.db.EmailConfigDao;
 
@@ -19,12 +22,15 @@ public class Account implements StoreConfig {
     private static final String INBOX = "INBOX";
     private static final String OUTBOX = "K9MAIL_INTERNAL_OUTBOX";
 
+    private final Context context;
     public final String name;
     public final String passwd;
-    public final int configId;
 
+    private final EmailConfig emailConfig;
     private final String transportUri;
     private final String storeUri;
+    private volatile Transport transport = null;
+    private volatile RemoteStore remoteStore = null;
     private final Map<NetworkType, Boolean> compressionMap;
     private volatile String inboxFolder;
     private volatile String draftFolder = null;
@@ -35,6 +41,7 @@ public class Account implements StoreConfig {
     private int maximumAutoDownloadMessageSize = 32768;
 
     public Account(Context context, Cursor cursor) {
+        this.context = context;
         // TODO: 目前默认所有连接方式都压缩，以后待功能稳定后，重构为可选择
         compressionMap = new ConcurrentHashMap<>();
         compressionMap.put(NetworkType.MOBILE, true);
@@ -45,19 +52,20 @@ public class Account implements StoreConfig {
         /* 读取数据库 */
         name = cursor.getString(1);
         passwd = cursor.getString(2);
-        configId = cursor.getInt(3);
+        int configId = cursor.getInt(3);
 
         // TODO: 这里应该可以用一条SQL语句搞定的，重构的时候试下
         EmailConfigDao dao = new EmailConfigDao(context);
-        EmailConfig config = dao.selectConfigFromDB(configId);
-        String[] uris = config.getDefaultServerSettingUri(name, passwd);
+        emailConfig = dao.selectConfigFromDB(configId);
+        String[] uris = emailConfig.getDefaultServerSettingUri(name, passwd);
         transportUri = uris[0];
         storeUri = uris[1];
     }
 
-    public Account(Context context,String name,String passwd,int configId,EmailConfig config) {
-        // TODO: 目前默认所有连接方式都压缩，以后待功能稳定后，重构为可选择
+    public Account(Context context, String name, String passwd, EmailConfig config) {
+        this.context = context;
         this.compressionMap = new ConcurrentHashMap<>();
+        // TODO: 目前默认所有连接方式都压缩，以后待功能稳定后，重构为可选择
         this.compressionMap.put(NetworkType.MOBILE, true);
         this.compressionMap.put(NetworkType.OTHER, true);
         this.compressionMap.put(NetworkType.WIFI, true);
@@ -66,10 +74,40 @@ public class Account implements StoreConfig {
 
         this.name = name;
         this.passwd = passwd;
-        this.configId = configId;
+        this.emailConfig = config;
         String[] uris = config.getDefaultServerSettingUri(name, passwd);
         this.transportUri = uris[0];
         this.storeUri = uris[1];
+    }
+
+    public synchronized RemoteStore getRemoteStore() {
+        if (remoteStore == null) {
+            try {
+                remoteStore = (RemoteStore) RemoteStore.getInstance(context, this);
+            } catch (MessagingException e) {
+                throw new RuntimeException("Can not initial RemoteStore");
+            }
+        }
+        return remoteStore;
+    }
+
+    public synchronized Transport getTransport() {
+        if (transport == null) {
+            try {
+                transport = Transport.getInstance(context, this);
+            } catch (MessagingException e) {
+                throw new RuntimeException("Can not initial Transport");
+            }
+        }
+        return transport;
+    }
+
+    public synchronized long getConfigId() {
+        if (emailConfig.getId() == -1) {
+            EmailConfigDao dao = new EmailConfigDao(context);
+            dao.insertConfig2DB(emailConfig);
+        }
+        return emailConfig.getId();
     }
 
     @Override

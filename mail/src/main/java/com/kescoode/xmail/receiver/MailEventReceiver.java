@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.kescoode.adk.log.Logger;
+import com.kescoode.xmail.AppConstant;
 import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.event.SettingCheckEvent;
 
@@ -16,7 +17,6 @@ import de.greenrobot.event.EventBus;
  * @author Kesco Lin
  */
 public class MailEventReceiver extends BroadcastReceiver {
-    private MailManager mailManager;
     private EventBus bus = EventBus.getDefault();
 
     public MailEventReceiver() {
@@ -24,9 +24,8 @@ public class MailEventReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mailManager = MailManager.getSingleTon(context); /* 这里可能会有点问题,看Service出现的情况而定 */
-        SettingCheckEvent event = intent.getParcelableExtra("haha");
+        Object event = intent.getParcelableExtra(AppConstant.Event.TAG);
         bus.post(event);
-        Logger.e("receive event: %s, %s", String.valueOf(event.ok), event.type.name());
+        Logger.e("receive event: %s", event.getClass().getCanonicalName());
     }
 }

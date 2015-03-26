@@ -16,6 +16,7 @@ public final class AppConstant {
         }
 
         public static final String BROADCAST = "com.kescoode.xmail.action.EVENT";
+        public static final String TAG = "event";
     }
 
     public static class DB {
