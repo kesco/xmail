@@ -109,6 +109,15 @@ public class MailManager {
         accounts.add(account);
     }
 
+    public Account getAccount(long accountId) {
+        for (Account account : accounts) {
+            if (account.getId() == accountId) {
+                return account;
+            }
+        }
+        throw new RuntimeException("The account object does not exist");
+    }
+
     /**
      * 获取Asset中的邮箱配置
      *

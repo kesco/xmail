@@ -9,8 +9,8 @@ import android.provider.BaseColumns;
  */
 public class EmailSchema implements BaseColumns {
     public static final String UID = "uid";
-    public static final String ACCOUNT_ID = "account_id";
-    public static final String SENDER_LIST = "sender_list ";
+    public static final String FOLDER_ID = "folder_id";
+    public static final String FROM_LIST = "from_list";
     public static final String TO_LIST = "to_list";
     public static final String CC_LIST = "cc_list";
     public static final String BCC_LIST = "bcc_list";

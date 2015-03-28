@@ -53,7 +53,9 @@ public class FolderDao extends DataDelegate {
         }
 
         Uri uri = context.getContentResolver().insert(parseUri(TABLE_NAME), values);
-        return ContentUris.parseId(uri);
+        long index = ContentUris.parseId(uri);
+        folder.setId(index);
+        return index;
     }
 
     /**

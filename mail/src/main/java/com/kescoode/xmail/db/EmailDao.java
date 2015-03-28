@@ -1,11 +1,17 @@
 package com.kescoode.xmail.db;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
+import com.fsck.k9.mail.Address;
+import com.fsck.k9.mail.Message;
+import com.fsck.k9.mail.MessagingException;
 import com.kescoode.xmail.db.internal.DataDelegate;
 import com.kescoode.xmail.db.table.EmailSchema;
-import com.kescoode.xmail.domain.LocalMail;
+import com.kescoode.xmail.domain.LocalEmail;
 
 /**
  * 邮件Dao
@@ -16,8 +22,8 @@ public class EmailDao extends DataDelegate {
     public static final String TABLE_NAME = "email";
     private static final String SQL_CREATE_TABLE = CREATE_TABLE + TABLE_NAME + " ( " + EmailSchema._ID + PRIMARY_KEY +
             EmailSchema.UID + TYPE_TEXT + COLUMN_NOT_NULL + ", " +
-            EmailSchema.ACCOUNT_ID + TYPE_INTEGER + COLUMN_NOT_NULL + ", " +
-            EmailSchema.SENDER_LIST + TYPE_TEXT + COLUMN_NOT_NULL + ", " +
+            EmailSchema.FOLDER_ID + TYPE_INTEGER + COLUMN_NOT_NULL + ", " +
+            EmailSchema.FROM_LIST + TYPE_TEXT + COLUMN_NOT_NULL + ", " +
             EmailSchema.TO_LIST + TYPE_TEXT + COLUMN_NOT_NULL + ", " +
             EmailSchema.CC_LIST + TYPE_TEXT + ", " +
             EmailSchema.BCC_LIST + TYPE_TEXT + ", " +
@@ -42,8 +48,32 @@ public class EmailDao extends DataDelegate {
      * @param mail 邮件业务对象
      * @return 插入的ID
      */
-    public long insertMail2DB(LocalMail mail) {
-        throw new UnsupportedOperationException("have not code");
+    public long insertMail2DB(LocalEmail mail) {
+        ContentValues values = new ContentValues();
+        values.put(EmailSchema.UID, mail.getUid());
+        values.put(EmailSchema.FOLDER_ID, mail.getFolderId());
+        values.put(EmailSchema.FROM_LIST, Address.pack(mail.getFrom()));
+        try {
+            values.put(EmailSchema.TO_LIST, Address.pack(mail.getRecipients(Message.RecipientType.TO)));
+            values.put(EmailSchema.CC_LIST, Address.pack(mail.getRecipients(Message.RecipientType.CC)));
+            values.put(EmailSchema.BCC_LIST, Address.pack(mail.getRecipients(Message.RecipientType.BCC)));
+        } catch (MessagingException e) {
+            /* 不会发生的异常 */
+        }
+        values.put(EmailSchema.IS_READ, mail.isRead());
+        values.put(EmailSchema.IS_FLAGGED, mail.isFlagged());
+        values.put(EmailSchema.IS_FORWARD, mail.isForward());
+        values.put(EmailSchema.TEXT_PATH, mail.getTextPath());
+        values.put(EmailSchema.HTML_PATH, mail.getHtmlPath());
+        values.put(EmailSchema.PREVIEW, mail.getPreview());
+        values.put(EmailSchema.SUBJECT, mail.getSubject());
+        values.put(EmailSchema.UPDATE_TIME, mail.getInternalDate().getTime());
+        values.put(EmailSchema.STATUS, mail.getStatus());
+
+        Uri uri = context.getContentResolver().insert(parseUri(TABLE_NAME), values);
+        long index = ContentUris.parseId(uri);
+        mail.setId(index);
+        return index;
     }
 
     /**
@@ -52,7 +82,7 @@ public class EmailDao extends DataDelegate {
      * @param mail 邮件业务对象
      * @return 更新的ID
      */
-    public int updateMail2DB(LocalMail mail) {
+    public int updateMail2DB(LocalEmail mail) {
         throw new UnsupportedOperationException("have not code");
     }
 

@@ -4,8 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.fsck.k9.mail.*;
+import com.kescoode.xmail.db.EmailDao;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,10 +17,11 @@ import java.util.Set;
  *
  * @author Kesco Lin
  */
-public class LocalFolder extends Folder<LocalMail> {
+public class LocalFolder extends Folder<LocalEmail> {
     private final Context context;
     private final Account account;
 
+    private volatile long id = -1;
     private final String name;
     private int totalCount;
     private int unReadCount;
@@ -28,6 +31,7 @@ public class LocalFolder extends Folder<LocalMail> {
     public LocalFolder(Context context, Account account,Cursor cursor) {
         this.context = context;
         this.account = account;
+        this.id = cursor.getLong(0);
         this.name = cursor.getString(2);
         this.totalCount = cursor.getInt(3);
         this.unReadCount = cursor.getInt(4);
@@ -76,6 +80,8 @@ public class LocalFolder extends Folder<LocalMail> {
         return true;
     }
 
+
+
     @Override
     public int getMessageCount() throws MessagingException {
         return totalCount;
@@ -92,28 +98,39 @@ public class LocalFolder extends Folder<LocalMail> {
     }
 
     @Override
-    public LocalMail getMessage(String uid) throws MessagingException {
+    public LocalEmail getMessage(String uid) throws MessagingException {
         return null;
     }
 
     @Override
-    public List<LocalMail> getMessages(int start, int end, Date earliestDate, MessageRetrievalListener<LocalMail> listener) throws MessagingException {
+    public List<LocalEmail> getMessages(int start, int end, Date earliestDate, MessageRetrievalListener<LocalEmail> listener) throws MessagingException {
         return null;
     }
 
     @Override
-    public List<LocalMail> getMessages(MessageRetrievalListener<LocalMail> listener) throws MessagingException {
+    public List<LocalEmail> getMessages(MessageRetrievalListener<LocalEmail> listener) throws MessagingException {
         return null;
     }
 
     @Override
-    public List<LocalMail> getMessages(String[] uids, MessageRetrievalListener<LocalMail> listener) throws MessagingException {
+    public List<LocalEmail> getMessages(String[] uids, MessageRetrievalListener<LocalEmail> listener) throws MessagingException {
         return null;
     }
 
     @Override
     public Map<String, String> appendMessages(List<? extends Message> messages) throws MessagingException {
-        return null;
+        open(OPEN_MODE_RW);
+        if (getMode() != OPEN_MODE_RW) {
+            throw new RuntimeException("Can not open the folder");
+        }
+        // TODO: 思考下，能用来做什么
+        Map<String, String> uidMap = new HashMap<>();
+        EmailDao dao = new EmailDao(context);
+        for (Message remote : messages) {
+            LocalEmail email = new LocalEmail(context, this, remote);
+            dao.insertMail2DB(email);
+        }
+        return uidMap;
     }
 
     @Override
@@ -132,7 +149,7 @@ public class LocalFolder extends Folder<LocalMail> {
     }
 
     @Override
-    public void fetch(List<LocalMail> messages, FetchProfile fp, MessageRetrievalListener<LocalMail> listener) throws MessagingException {
+    public void fetch(List<LocalEmail> messages, FetchProfile fp, MessageRetrievalListener<LocalEmail> listener) throws MessagingException {
 
     }
 
@@ -154,4 +171,16 @@ public class LocalFolder extends Folder<LocalMail> {
     public long getAccountId() {
         return account.getId();
     }
+
+    public long getId() {
+        if (id == -1) {
+            throw new UnsupportedOperationException("The folder has not been inserted into database.");
+        }
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 }

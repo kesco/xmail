@@ -5,12 +5,16 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.fsck.k9.mail.MessagingException;
 import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.EmailConfig;
+import com.kescoode.xmail.domain.LocalFolder;
+import com.kescoode.xmail.domain.LocalStore;
 import com.kescoode.xmail.service.aidl.IRemoteMailService;
 import com.kescoode.xmail.service.internal.CoreService;
 import com.kescoode.xmail.service.task.SettingsCheckCommand;
+import com.kescoode.xmail.service.task.SyncFolderCommand;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -31,8 +35,21 @@ public class MailService extends CoreService {
         }
 
         @Override
-        public void update(int accountId) throws RemoteException {
+        public void syncAll(long accountId) throws RemoteException {
 
+        }
+
+        @Override
+        public void syncFolder(long accountId, String folder) throws RemoteException {
+            Account account = manager.getAccount(accountId);
+            LocalStore localStore = account.getLocalStore();
+            try {
+                localStore.checkSettings();
+                executor.execute(new SyncFolderCommand(MailService.this, account,
+                        localStore.getFolder(folder)));
+            } catch (MessagingException e) {
+                /* 根本不会异常 */
+            }
         }
     };
 
@@ -52,6 +69,7 @@ public class MailService extends CoreService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        manager.dB2Account();
 
         /* 返回原来CoreService的设置 */
         return super.onStartCommand(intent, flags, startId);

@@ -1,7 +1,11 @@
 package com.kescoode.xmail.ui.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +21,7 @@ import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.EmailConfig;
 import com.kescoode.xmail.service.MailService;
 import com.kescoode.xmail.service.TimerService;
+import com.kescoode.xmail.service.aidl.IRemoteMailService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,8 +30,19 @@ import java.util.List;
 
 
 public class HomeActivity extends ActionBarActivity {
-    private MailManager mailManager;
+    private IRemoteMailService mailService;
+    private final ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mailService = IRemoteMailService.Stub.asInterface(service);
+        }
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mailService = null;
+        }
+    };
+    private MailManager mailManager;
     private List<Account> accounts;
 
     @Override
@@ -40,14 +56,11 @@ public class HomeActivity extends ActionBarActivity {
         findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long start = System.currentTimeMillis();
-                AccountDao dao = new AccountDao(HomeActivity.this);
-                if (dao.getAllAccounts().length == 0) {
-                    Logger.e("have no account");
-                } else {
-                    Logger.e("have %d accounts",dao.getAllAccounts().length);
+                try {
+                    mailService.syncFolder(accounts.get(0).getId(), "INBOX");
+                } catch (RemoteException e) {
+                    Logger.e("Can not bind Service");
                 }
-                Logger.e("Cost %d millis", System.currentTimeMillis() - start);
             }
         });
     }
@@ -71,6 +84,25 @@ public class HomeActivity extends ActionBarActivity {
             // TODO: 到时候要加入识别码
             startActivity(intent);
             finish();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        connService();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unbindService(conn);
+    }
+
+    private void connService() {
+        Intent intent = new Intent(this, MailService.class);
+        if (!bindService(intent, conn, BIND_AUTO_CREATE)) {
+            throw new RuntimeException("Can not bind MailService.");
         }
     }
 

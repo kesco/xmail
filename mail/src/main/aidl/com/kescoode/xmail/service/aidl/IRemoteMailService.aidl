@@ -13,6 +13,11 @@ interface IRemoteMailService {
     /**
      * 更新邮箱
      */
-    void update(int accountId);
+    void syncAll(long accountId);
+
+    /**
+     * 更新文件夹
+     */
+    void syncFolder(long accountId, String folder);
 
 }

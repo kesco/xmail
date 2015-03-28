@@ -11,7 +11,6 @@ import com.kescoode.xmail.db.FolderDao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 本地接收服务器的映射业务对象
@@ -22,9 +21,9 @@ public class LocalStore extends Store {
     private final Context context;
     private final Account account;
 
-    private List<LocalFolder> folders;
+    private List<LocalFolder> folders = null;
 
-    public LocalStore(Context context,Account account) {
+    public LocalStore(Context context, Account account) {
         this.context = context;
         this.account = account;
     }
@@ -70,8 +69,10 @@ public class LocalStore extends Store {
 
     @Override
     public void checkSettings() throws MessagingException {
-        /* 初始化 */
-        getPersonalNamespaces(true);
+        if (folders == null) {
+            /* 初始化 */
+            getPersonalNamespaces(true);
+        }
     }
 
     @Override
