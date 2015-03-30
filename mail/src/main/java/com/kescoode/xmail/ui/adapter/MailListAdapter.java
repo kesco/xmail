@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.fsck.k9.mail.Address;
-import com.fsck.k9.mail.Message;
-import com.fsck.k9.mail.MessagingException;
 import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.db.EmailDao;
@@ -80,11 +78,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.ViewHo
         protected void initView(final LocalEmail message, final Context context) {
             mTvTitle.setText(message.getSubject());
             Address[] addresses = new Address[0];
-            try {
-                addresses = message.getRecipients(Message.RecipientType.TO);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
+            addresses = message.getFrom();
             if (0 != addresses.length) {
                 mTvSender.setText(addresses[0].getPersonal());
             }

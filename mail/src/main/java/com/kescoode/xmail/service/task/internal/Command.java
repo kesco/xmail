@@ -1,9 +1,11 @@
 package com.kescoode.xmail.service.task.internal;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.os.Process;
 import android.support.annotation.NonNull;
-
+import com.kescoode.xmail.AppConstant;
 import com.kescoode.xmail.domain.Account;
 
 /**
@@ -11,7 +13,7 @@ import com.kescoode.xmail.domain.Account;
  *
  * @author Kesco Lin
  */
-public abstract class Command implements Runnable,Comparable<Command> {
+public abstract class Command implements Runnable, Comparable<Command> {
 
     public enum Priority {
         HIGH(-1), NORMAL(0), LOW(1);
@@ -27,13 +29,24 @@ public abstract class Command implements Runnable,Comparable<Command> {
     private Priority priority = Priority.NORMAL;
     protected final Account account;
 
-    public Command(Context context,Account account) {
+    public Command(Context context, Account account) {
         this.context = context;
         this.account = account;
     }
 
     public final void setPriority(@NonNull Priority priority) {
         this.priority = priority;
+    }
+
+    /**
+     * 发送事件广播
+     *
+     * @param event 事件对象
+     */
+    protected void sendBroadCaset(Parcelable event) {
+        Intent intent = new Intent(AppConstant.Event.BROADCAST);
+        intent.putExtra(AppConstant.Event.TAG, event);
+        context.sendBroadcast(intent);
     }
 
     @Override
@@ -54,4 +67,5 @@ public abstract class Command implements Runnable,Comparable<Command> {
             return -1;
         }
     }
+
 }

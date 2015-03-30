@@ -14,6 +14,7 @@ import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.LocalFolder;
 import com.kescoode.xmail.domain.LocalStore;
+import com.kescoode.xmail.event.SyncFolderEvent;
 import com.kescoode.xmail.service.task.internal.Command;
 
 import java.util.ArrayList;
@@ -45,8 +46,8 @@ public class SyncFolderCommand extends Command {
             remoteStore.checkSettings();
             syncFolder(folder);
         } catch (MessagingException e) {
-            // TODO: 发送特定消息给前台
             Logger.e(e.getMessage());
+            sendBroadCaset(new SyncFolderEvent(folder.getId(),SyncFolderEvent.FAIL,SyncFolderEvent.FAIL));
         }
     }
 

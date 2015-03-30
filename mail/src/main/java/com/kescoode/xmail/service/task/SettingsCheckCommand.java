@@ -1,12 +1,9 @@
 package com.kescoode.xmail.service.task;
 
 import android.content.Context;
-import android.content.Intent;
-
 import com.fsck.k9.mail.MessagingException;
 import com.fsck.k9.mail.Transport;
 import com.fsck.k9.mail.store.RemoteStore;
-import com.kescoode.xmail.AppConstant;
 import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.LocalStore;
@@ -32,19 +29,14 @@ public class SettingsCheckCommand extends Command {
         Transport transport = account.getTransport();
         RemoteStore remoteStore = account.getRemoteStore();
         LocalStore localStore = account.getLocalStore();
-        Intent intent;
         try {
             /* 检验发送服务器配置 */
             transport.close();
             transport.open();   /* 建立与SMTP服务器的连接，检索所有发件箱的内容 */
             transport.close();
-            intent = new Intent(AppConstant.Event.BROADCAST);
-            intent.putExtra(AppConstant.Event.TAG, new SettingCheckEvent(true, SettingCheckEvent.Type.SEND));
-            context.sendBroadcast(intent);
+            sendBroadCaset(new SettingCheckEvent(true, SettingCheckEvent.Type.SEND));
         } catch (MessagingException e) {
-            intent = new Intent(AppConstant.Event.BROADCAST);
-            intent.putExtra(AppConstant.Event.TAG, new SettingCheckEvent(false, SettingCheckEvent.Type.SEND));
-            context.sendBroadcast(intent);
+            sendBroadCaset(new SettingCheckEvent(false, SettingCheckEvent.Type.SEND));
         }
 
         try {
@@ -52,13 +44,9 @@ public class SettingsCheckCommand extends Command {
             remoteStore.checkSettings();
             manager.addAccount(account);
             localStore.syncRemote(remoteStore.getPersonalNamespaces(false), false);
-            intent = new Intent(AppConstant.Event.BROADCAST);
-            intent.putExtra(AppConstant.Event.TAG, new SettingCheckEvent(true, SettingCheckEvent.Type.RECEIVE));
-            context.sendBroadcast(intent);
+            sendBroadCaset(new SettingCheckEvent(true, SettingCheckEvent.Type.RECEIVE));
         } catch (MessagingException e) {
-            intent = new Intent(AppConstant.Event.BROADCAST);
-            intent.putExtra(AppConstant.Event.TAG, new SettingCheckEvent(false, SettingCheckEvent.Type.RECEIVE));
-            context.sendBroadcast(intent);
+            sendBroadCaset(new SettingCheckEvent(false, SettingCheckEvent.Type.RECEIVE));
         }
     }
 }

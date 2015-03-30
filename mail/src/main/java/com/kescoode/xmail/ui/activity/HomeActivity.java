@@ -59,9 +59,6 @@ public class HomeActivity extends ActionBarActivity implements SwipeRefreshLayou
 
         startAppService();
         initData();
-        setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
-        initViews();
     }
 
     private void startAppService() {
@@ -83,6 +80,10 @@ public class HomeActivity extends ActionBarActivity implements SwipeRefreshLayou
             // TODO: 到时候要加入识别码
             startActivity(intent);
             finish();
+        } else {
+            setContentView(R.layout.activity_main);
+            ButterKnife.inject(this);
+            initViews();
         }
     }
 

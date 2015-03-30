@@ -15,8 +15,8 @@ public final class AppConstant {
             throw new UnsupportedOperationException("Could not call the constructor");
         }
 
-        public static final String CONTENT_PATH = "content";
-        public static final String ATTACHMENT_PATH = "attachment";
+        public static final String CONTENT_PATH = "contents";
+        public static final String ATTACHMENT_PATH = "attachments";
     }
 
     public static class Event {

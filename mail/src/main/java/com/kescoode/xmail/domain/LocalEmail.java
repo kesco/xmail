@@ -5,10 +5,15 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import com.fsck.k9.mail.*;
 import com.fsck.k9.mail.internet.*;
+import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.domain.internal.HtmlConverter;
 import com.kescoode.xmail.domain.internal.UiMessageContent;
 import com.kescoode.xmail.domain.internal.UiMessageExtractor;
+import com.kescoode.xmail.exception.XDynamicException;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
 
@@ -30,6 +35,9 @@ public class LocalEmail extends MimeMessage {
     private String subject;
     private int status = -1;
 
+    private String text = null;
+    private String html = null;
+
     public LocalEmail(Context context, LocalFolder folder, Cursor cursor) {
         this.context = context;
         this.mFolder = folder;
@@ -50,6 +58,13 @@ public class LocalEmail extends MimeMessage {
         setInternalDate(new Date(cursor.getLong(14)));
         this.status = cursor.getInt(15);
 
+        // TODO: 把读取本地文件放后
+        try {
+            this.text = FileUtils.readFileToString(new File(this.textPath));
+            this.html = FileUtils.readFileToString(new File(this.htmlPath));
+        } catch (IOException e) {
+            throw new XDynamicException("Cannot load Local Text");
+        }
         try {
             String mimeType = getMimeType();
             MimeMultipart mp = new MimeMultipart();
@@ -58,14 +73,14 @@ public class LocalEmail extends MimeMessage {
                 // If this is a multipart message, preserve both text
                 // and html parts, as well as the subtype.
                 mp.setSubType(mimeType.toLowerCase(Locale.US).replaceFirst("^multipart/", ""));
-                if (textPath != null) {
-                    LocalTextBody body = new LocalTextBody(textPath, htmlPath);
+                if (text != null) {
+                    LocalTextBody body = new LocalTextBody(text, html);
                     MimeBodyPart bp = new MimeBodyPart(body, "text/plain");
                     mp.addBodyPart(bp);
                 }
 
-                if (htmlPath != null) {
-                    TextBody body = new TextBody(htmlPath);
+                if (html != null) {
+                    TextBody body = new TextBody(html);
                     MimeBodyPart bp = new MimeBodyPart(body, "text/html");
                     mp.addBodyPart(bp);
                 }
@@ -76,7 +91,7 @@ public class LocalEmail extends MimeMessage {
                 // If it turns out that this is the only part in the parent
                 // MimeMultipart, it'll get fixed below before we attach to
                 // the message.
-                if (textPath != null && htmlPath != null && !mimeType.equalsIgnoreCase("multipart/alternative")) {
+                if (text != null && html != null && !mimeType.equalsIgnoreCase("multipart/alternative")) {
                     MimeMultipart alternativeParts = mp;
                     alternativeParts.setSubType("alternative");
                     mp = new MimeMultipart();
@@ -85,16 +100,16 @@ public class LocalEmail extends MimeMessage {
             } else if (mimeType != null && mimeType.equalsIgnoreCase("text/plain")) {
                 // If it's text, add only the plain part. The MIME
                 // container will drop away below.
-                if (textPath != null) {
-                    LocalTextBody body = new LocalTextBody(textPath, htmlPath);
+                if (text != null) {
+                    LocalTextBody body = new LocalTextBody(text, html);
                     MimeBodyPart bp = new MimeBodyPart(body, "text/plain");
                     mp.addBodyPart(bp);
                 }
             } else if (mimeType != null && mimeType.equalsIgnoreCase("text/html")) {
                 // If it's html, add only the html part. The MIME
                 // container will drop away below.
-                if (htmlPath != null) {
-                    TextBody body = new TextBody(htmlPath);
+                if (html != null) {
+                    TextBody body = new TextBody(html);
                     MimeBodyPart bp = new MimeBodyPart(body, "text/html");
                     mp.addBodyPart(bp);
                 }
@@ -102,12 +117,12 @@ public class LocalEmail extends MimeMessage {
                 // MIME type not set. Grab whatever part we can get,
                 // with Text taking precedence. This preserves pre-HTML
                 // composition behaviour.
-                if (textPath != null) {
-                    LocalTextBody body = new LocalTextBody(textPath, htmlPath);
+                if (text != null) {
+                    LocalTextBody body = new LocalTextBody(text, html);
                     MimeBodyPart bp = new MimeBodyPart(body, "text/plain");
                     mp.addBodyPart(bp);
-                } else if (htmlPath != null) {
-                    TextBody body = new TextBody(htmlPath);
+                } else if (html != null) {
+                    TextBody body = new TextBody(html);
                     MimeBodyPart bp = new MimeBodyPart(body, "text/html");
                     mp.addBodyPart(bp);
                 }
@@ -149,12 +164,21 @@ public class LocalEmail extends MimeMessage {
             // TODO: 这里和K9现在的实现不一样，以后要做相应的改变
             UiMessageContent content = UiMessageExtractor
                     .extractMessageFromScratch(context, remote);
-            this.textPath = content.text;
-            this.htmlPath = HtmlConverter.convertEmoji2Img(content.html);
+            this.text = content.text;
+            this.html = HtmlConverter.convertEmoji2Img(content.html);
+            // TODO: 把这里的工作放在保存数据库之后
+            File file = generateFilePath(false);
+            this.textPath = file.getPath();
+            FileUtils.writeStringToFile(file, this.text);
+            file = generateFilePath(true);
+            FileUtils.writeStringToFile(file, this.html);
+            this.htmlPath = file.getPath();
             this.preview = content.calculateContentPreview(content.text);
             setInternalDate(remote.getSentDate() != null ? remote.getSentDate() : remote.getInternalDate());
         } catch (MessagingException e) {
             throw new RuntimeException("Can not load remote message");
+        } catch (IOException e) {
+            throw new XDynamicException("Can not load remote message");
         }
         this.subject = remote.getSubject();
     }
@@ -262,4 +286,23 @@ public class LocalEmail extends MimeMessage {
     public int getStatus() {
         return status;
     }
+
+    /**
+     * 创建内容Path(随机)
+     *
+     * @param html 是否为html文档
+     * @return 路径的File对象
+     */
+    private File generateFilePath(boolean html) {
+        String tmp = System.currentTimeMillis() + "-" + hashCode();
+        String path;
+        if (html) {
+            path = "html-" + tmp;
+        } else {
+            path = "text-" + tmp;
+        }
+        MailManager manager = MailManager.getSingleTon(context);
+        return new File(manager.getContentDir(), path);
+    }
+
 }
