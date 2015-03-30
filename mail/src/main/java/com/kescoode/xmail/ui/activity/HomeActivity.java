@@ -6,30 +6,38 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.controller.MailManager;
-import com.kescoode.xmail.db.AccountDao;
-import com.kescoode.xmail.db.EmailConfigDao;
+import com.kescoode.xmail.db.FolderDao;
 import com.kescoode.xmail.domain.Account;
-import com.kescoode.xmail.domain.EmailConfig;
+import com.kescoode.xmail.domain.LocalFolder;
 import com.kescoode.xmail.service.MailService;
 import com.kescoode.xmail.service.TimerService;
 import com.kescoode.xmail.service.aidl.IRemoteMailService;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.kescoode.xmail.ui.adapter.MailListAdapter;
 
 import java.util.List;
 
 
-public class HomeActivity extends ActionBarActivity {
+public class HomeActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+    @InjectView(R.id.srl_index)
+    SwipeRefreshLayout mSrlIndex;
+
+    @InjectView(R.id.rcv_mails)
+    RecyclerView mRcvMails;
+
+    private MailListAdapter adapter;
+
     private IRemoteMailService mailService;
     private final ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -52,17 +60,8 @@ public class HomeActivity extends ActionBarActivity {
         startAppService();
         initData();
         setContentView(R.layout.activity_main);
-
-        findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    mailService.syncFolder(accounts.get(0).getId(), "INBOX");
-                } catch (RemoteException e) {
-                    Logger.e("Can not bind Service");
-                }
-            }
-        });
+        ButterKnife.inject(this);
+        initViews();
     }
 
     private void startAppService() {
@@ -87,6 +86,23 @@ public class HomeActivity extends ActionBarActivity {
         }
     }
 
+    private void initViews() {
+        mSrlIndex.setOnRefreshListener(this);
+        mSrlIndex.setColorSchemeColors(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        mRcvMails.setHasFixedSize(true);
+        mRcvMails.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new MailListAdapter(this);
+        mRcvMails.setAdapter(adapter);
+
+        FolderDao dao = new FolderDao(this);
+        LocalFolder folder = dao.selectFolder4Name(accounts.get(0), "INBOX");
+        adapter.setDataSet(folder);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -103,6 +119,15 @@ public class HomeActivity extends ActionBarActivity {
         Intent intent = new Intent(this, MailService.class);
         if (!bindService(intent, conn, BIND_AUTO_CREATE)) {
             throw new RuntimeException("Can not bind MailService.");
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        try {
+            mailService.syncFolder(accounts.get(0).getId(), "INBOX");
+        } catch (RemoteException e) {
+            Logger.e("Can not bind Service");
         }
     }
 

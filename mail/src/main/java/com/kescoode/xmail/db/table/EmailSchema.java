@@ -21,7 +21,7 @@ public class EmailSchema implements BaseColumns {
     public static final String HTML_PATH = "html_path";
     public static final String PREVIEW = "preview";
     public static final String SUBJECT = "subject";
-    public static final String UPDATE_TIME = "update_time";
+    public static final String DATE = "date";
     public static final String STATUS = "status";
 
     private EmailSchema() {

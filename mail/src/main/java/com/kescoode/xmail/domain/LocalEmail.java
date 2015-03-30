@@ -3,20 +3,8 @@ package com.kescoode.xmail.domain;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
-
-import com.fsck.k9.mail.Address;
-import com.fsck.k9.mail.BodyPart;
-import com.fsck.k9.mail.Message;
-import com.fsck.k9.mail.MessagingException;
-import com.fsck.k9.mail.Part;
-import com.fsck.k9.mail.internet.MessageExtractor;
-import com.fsck.k9.mail.internet.MimeBodyPart;
-import com.fsck.k9.mail.internet.MimeHeader;
-import com.fsck.k9.mail.internet.MimeMessage;
-import com.fsck.k9.mail.internet.MimeMessageHelper;
-import com.fsck.k9.mail.internet.MimeMultipart;
-import com.fsck.k9.mail.internet.MimeUtility;
-import com.fsck.k9.mail.internet.TextBody;
+import com.fsck.k9.mail.*;
+import com.fsck.k9.mail.internet.*;
 import com.kescoode.xmail.domain.internal.HtmlConverter;
 import com.kescoode.xmail.domain.internal.UiMessageContent;
 import com.kescoode.xmail.domain.internal.UiMessageExtractor;
@@ -40,7 +28,6 @@ public class LocalEmail extends MimeMessage {
     private String htmlPath;
     private String preview;
     private String subject;
-    private long date;                  // TODO: 考虑要不要去掉
     private int status = -1;
 
     public LocalEmail(Context context, LocalFolder folder, Cursor cursor) {
@@ -60,7 +47,7 @@ public class LocalEmail extends MimeMessage {
         this.htmlPath = cursor.getString(11);
         this.preview = cursor.getString(12);
         this.subject = cursor.getString(13);
-        this.date = cursor.getLong(14);
+        setInternalDate(new Date(cursor.getLong(14)));
         this.status = cursor.getInt(15);
 
         try {
@@ -165,7 +152,7 @@ public class LocalEmail extends MimeMessage {
             this.textPath = content.text;
             this.htmlPath = HtmlConverter.convertEmoji2Img(content.html);
             this.preview = content.calculateContentPreview(content.text);
-
+            setInternalDate(remote.getSentDate() != null ? remote.getSentDate() : remote.getInternalDate());
         } catch (MessagingException e) {
             throw new RuntimeException("Can not load remote message");
         }
@@ -206,22 +193,6 @@ public class LocalEmail extends MimeMessage {
     }
 
     @Override
-    public Date getSentDate() {
-        return new Date(date);
-    }
-
-    @Override
-    public Date getInternalDate() {
-        return new Date(date);
-    }
-
-    @Override
-    public void setInternalDate(Date internalDate) {
-        super.setInternalDate(internalDate);
-        date = internalDate.getTime();
-    }
-
-    @Override
     public String getSubject() {
         return subject != null ? subject : "";
     }
@@ -231,9 +202,14 @@ public class LocalEmail extends MimeMessage {
         return preview;
     }
 
-    public void setInternalDate(long internalDate) {
-        super.setInternalDate(new Date(internalDate));
-        date = internalDate;
+    /**
+     * 这里把Send Date和Internal Date统一了
+     *
+     * @return 发送日期
+     */
+    @Override
+    public Date getSentDate() {
+        return getInternalDate();
     }
 
     public long getFolderId() {

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-
-import com.fsck.k9.mail.Folder;
 import com.fsck.k9.mail.MessagingException;
 import com.kescoode.xmail.db.internal.DataDelegate;
 import com.kescoode.xmail.db.table.FolderSchema;
@@ -46,7 +44,7 @@ public class FolderDao extends DataDelegate {
             values.put(FolderSchema.NAME, folder.getName());
             values.put(FolderSchema.TOTAL_COUNT, folder.getMessageCount());
             values.put(FolderSchema.UNREAD_COUNT, folder.getUnreadMessageCount());
-            values.put(FolderSchema.FLAGGED_COUNT,folder.getFlaggedMessageCount());
+            values.put(FolderSchema.FLAGGED_COUNT, folder.getFlaggedMessageCount());
             values.put(FolderSchema.UPDATE_TIME, folder.getUpdateTime());
         } catch (MessagingException e) {
             /* 永远不会触发 */
@@ -82,6 +80,16 @@ public class FolderDao extends DataDelegate {
         }
         cursor.close();
         return folders;
+    }
+
+    public LocalFolder selectFolder4Name(Account account, String name) {
+        Cursor cursor = select(parseUri(TABLE_NAME), "select * from folder where name = ? and account_id = ?",
+                name,account.getId());
+        if (cursor.moveToFirst()) {
+            return new LocalFolder(context, account, cursor);
+        } else {
+            throw new RuntimeException("DB cannot load the folder");
+        }
     }
 
 

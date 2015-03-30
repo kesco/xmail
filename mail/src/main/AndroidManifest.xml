@@ -48,6 +48,8 @@
         <activity
             android:name=".ui.activity.AccountActivity"
             android:label="@string/title_activity_account" />
+        <activity android:name=".ui.activity.MailDetailActivity"/>
+
     </application>
 
 </manifest>
