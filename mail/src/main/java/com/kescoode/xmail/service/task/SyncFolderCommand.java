@@ -1,7 +1,6 @@
 package com.kescoode.xmail.service.task;
 
 import android.content.Context;
-import android.os.Looper;
 
 import com.fsck.k9.mail.FetchProfile;
 import com.fsck.k9.mail.Folder;
@@ -22,7 +21,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 同步文件夹，目前只做Pull，不做Push
@@ -45,14 +43,20 @@ public class SyncFolderCommand extends Command {
     public void task() {
         try {
             remoteStore.checkSettings();
-            sync(folder);
+            syncFolder(folder);
         } catch (MessagingException e) {
             // TODO: 发送特定消息给前台
             Logger.e(e.getMessage());
         }
     }
 
-    protected void sync(final LocalFolder folder) throws MessagingException {
+    protected void syncFolder(final LocalFolder folder) throws MessagingException {
+        /* 和K-9一样，我们不同步发件箱 */
+        String folderName = folder.getName();
+        if (folderName.equals(account.getOutboxFolderName())) {
+            return;
+        }
+
         localStore.checkSettings();
         final Folder remote = remoteStore.getFolder(folder.getName());
         folder.open(Folder.OPEN_MODE_RW);
@@ -67,12 +71,16 @@ public class SyncFolderCommand extends Command {
 
         // TODO: 目前是把邮件的所有部分都拉过来，以后做附件的时候优化
         List<? extends Message> remoteMessages = remote.getMessages(1, total, new Date(2000, 1, 1), null);
-        final FetchProfile fp = new FetchProfile();
+        List<? extends Message> syncEmails = new ArrayList<>();
+        final List<Message> smallEmails = new ArrayList<>();
+        final List<Message> largerEmails = new ArrayList<>();
+
+        FetchProfile fp = new FetchProfile();
         if (remote.supportsFetchingFlags()) {
             fp.add(FetchProfile.Item.FLAGS);
         }
         fp.add(FetchProfile.Item.ENVELOPE);
-
+        Logger.d("Fetch Basic Emails");
         remote.fetch(remoteMessages, fp, new MessageRetrievalListener() {
             @Override
             public void messageStarted(String uid, int number, int ofTotal) {
@@ -81,7 +89,12 @@ public class SyncFolderCommand extends Command {
 
             @Override
             public void messageFinished(Message message, int number, int ofTotal) {
-                /* Empty */
+                if (account.getMaximumAutoDownloadMessageSize() > 0 &&
+                        message.getSize() > account.getMaximumAutoDownloadMessageSize()) {
+                    largerEmails.add(message);
+                } else {
+                    smallEmails.add(message);
+                }
             }
 
             @Override
@@ -90,9 +103,10 @@ public class SyncFolderCommand extends Command {
             }
         });
 
-        fp.clear();
+        Logger.d("Download %d emails smaller than the larger settings", smallEmails.size());
+        fp = new FetchProfile();
         fp.add(FetchProfile.Item.BODY);
-        remote.fetch(remoteMessages, fp, new MessageRetrievalListener() {
+        remote.fetch(smallEmails, fp, new MessageRetrievalListener() {
             @Override
             public void messageStarted(String uid, int number, int ofTotal) {
                 /* Empty */
@@ -100,7 +114,11 @@ public class SyncFolderCommand extends Command {
 
             @Override
             public void messageFinished(Message message, int number, int ofTotal) {
-                /* Empty */
+                try {
+                    folder.appendMessages(Collections.singletonList(message));
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -109,9 +127,10 @@ public class SyncFolderCommand extends Command {
             }
         });
 
-        fp.clear();
+        Logger.d("Download %d larger emails", largerEmails.size());
+        fp = new FetchProfile();
         fp.add(FetchProfile.Item.STRUCTURE);
-        remote.fetch(remoteMessages, fp, new MessageRetrievalListener() {
+        remote.fetch(largerEmails, fp, new MessageRetrievalListener() {
                     @Override
                     public void messageStarted(String uid, int number, int ofTotal) {
                     }
@@ -120,9 +139,9 @@ public class SyncFolderCommand extends Command {
                     public void messageFinished(Message message, int number, int ofTotal) {
                         try {
                             if (message.getBody() == null) {
-                                fp.clear();
-                                fp.add(FetchProfile.Item.BODY_SANE);
-                                remote.fetch(Collections.singletonList(message), fp, null);
+                                FetchProfile tmpFp = new FetchProfile();
+                                tmpFp.add(FetchProfile.Item.BODY_SANE);
+                                remote.fetch(Collections.singletonList(message), tmpFp, null);
                             } else {
                                 Set<Part> viewables = MessageExtractor.collectTextParts(message);
                                 for (Part part : viewables) {
@@ -141,8 +160,6 @@ public class SyncFolderCommand extends Command {
                 }
 
         );
-
-        Logger.d("Fetch Message: %d", remoteMessages.size());
 
         folder.close();
         remote.close();
