@@ -32,7 +32,7 @@ public class AccountDao extends DataDelegate {
      *
      * @return 已登录的帐户数组
      */
-    public Account[] getAllAccounts() {
+    public Account[] selectAllAccounts() {
         Cursor cursor = select(parseUri(TABLE_NAME), "select * from account");
         Account[] accounts = new Account[cursor.getCount()];
         if (accounts.length != 0 && cursor.moveToFirst()) {

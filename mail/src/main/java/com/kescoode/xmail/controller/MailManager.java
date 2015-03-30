@@ -2,7 +2,6 @@ package com.kescoode.xmail.controller;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.kescoode.adk.log.Logger;
@@ -21,11 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * 管理App全局邮件业务对象的开关类
@@ -86,7 +81,7 @@ public class MailManager {
     public void dB2Account() {
         accounts.clear();
         AccountDao dao = new AccountDao(context);
-        accounts.addAll(Arrays.asList(dao.getAllAccounts()));
+        accounts.addAll(Arrays.asList(dao.selectAllAccounts()));
     }
 
     /**

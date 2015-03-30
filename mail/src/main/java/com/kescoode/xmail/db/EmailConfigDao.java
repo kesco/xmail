@@ -34,13 +34,14 @@ public class EmailConfigDao extends DataDelegate {
      * @return EmailConfig类或者null
      */
     public EmailConfig selectConfigFromDB(int id) {
+        EmailConfig config = null;
         Cursor cursor = select(parseUri(TABLE_NAME), "select * from email_config where _id = ?", id);
-        if (cursor.getCount() == 0) {
-            return null;
-        } else {
+        if (cursor.getCount() != 0) {
             cursor.moveToFirst();
-            return new EmailConfig(cursor);
+            config = new EmailConfig(cursor);
         }
+        cursor.close();
+        return config;
     }
 
     /**

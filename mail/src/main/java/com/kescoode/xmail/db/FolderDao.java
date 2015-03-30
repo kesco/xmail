@@ -82,16 +82,24 @@ public class FolderDao extends DataDelegate {
         return folders;
     }
 
+    /**
+     * 根据文件夹名称查找文件夹(精确查找)
+     *
+     * @param account 邮件客户实体类
+     * @param name 文件夹名称
+     * @return 邮件文件夹对象
+     */
     public LocalFolder selectFolder4Name(Account account, String name) {
+        LocalFolder folder = null;
         Cursor cursor = select(parseUri(TABLE_NAME), "select * from folder where name = ? and account_id = ?",
                 name,account.getId());
-        if (cursor.moveToFirst()) {
-            return new LocalFolder(context, account, cursor);
-        } else {
-            throw new RuntimeException("DB cannot load the folder");
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            folder = new LocalFolder(context, account, cursor);
         }
+        cursor.close();
+        return folder;
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {

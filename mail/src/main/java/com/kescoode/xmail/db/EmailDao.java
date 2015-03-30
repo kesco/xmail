@@ -87,6 +87,12 @@ public class EmailDao extends DataDelegate {
         throw new UnsupportedOperationException("have not code");
     }
 
+    /**
+     * 获取文件夹里的所有邮件
+     *
+     * @param folder 文件夹对象
+     * @return 邮件对象数组
+     */
     public LocalEmail[] selectMails4Folder(LocalFolder folder) {
         Cursor cursor = select(parseUri(TABLE_NAME), "select * from email where folder_id = ?", folder.getId());
         int num = cursor.getCount();
@@ -102,16 +108,26 @@ public class EmailDao extends DataDelegate {
                 throw new RuntimeException("DB cannot load emails");
             }
         }
+        cursor.close();
         return mails;
     }
 
-    public LocalEmail selectMailsFromId(LocalFolder folder,long id) {
-        Cursor cursor = select(parseUri(TABLE_NAME), "select * from email where _id = ?", id);
+    /**
+     * 根据邮件ID获取邮件
+     *
+     * @param folder
+     * @param id 邮件ID
+     * @return 邮件对象
+     */
+    public LocalEmail selectMailsFromId(LocalFolder folder, long id) {
+        Cursor cursor;
+        LocalEmail email = null;
+        cursor = select(parseUri(TABLE_NAME), "select * from email where _id = ?", id);
         if (cursor.moveToFirst()) {
-            return new LocalEmail(context, folder, cursor);
-        } else {
-            throw new RuntimeException("DB cannot load email");
+            email = new LocalEmail(context, folder, cursor);
         }
+        cursor.close();
+        return email;
     }
 
     @Override
