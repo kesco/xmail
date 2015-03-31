@@ -1,17 +1,12 @@
 package com.kescoode.xmail.ui.activity;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.kescoode.adk.log.Logger;
@@ -22,13 +17,12 @@ import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.LocalFolder;
 import com.kescoode.xmail.service.MailService;
 import com.kescoode.xmail.service.TimerService;
-import com.kescoode.xmail.service.aidl.IRemoteMailService;
+import com.kescoode.xmail.ui.activity.internal.MailConnActivity;
 import com.kescoode.xmail.ui.adapter.MailListAdapter;
 
 import java.util.List;
 
-
-public class HomeActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     @InjectView(R.id.srl_index)
     SwipeRefreshLayout mSrlIndex;
@@ -38,18 +32,6 @@ public class HomeActivity extends ActionBarActivity implements SwipeRefreshLayou
 
     private MailListAdapter adapter;
 
-    private IRemoteMailService mailService;
-    private final ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mailService = IRemoteMailService.Stub.asInterface(service);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mailService = null;
-        }
-    };
     private MailManager mailManager;
     private List<Account> accounts;
 
@@ -76,9 +58,7 @@ public class HomeActivity extends ActionBarActivity implements SwipeRefreshLayou
         mailManager.dB2Account();
         accounts = mailManager.getAccounts();
         if (accounts.size() == 0) {
-            Intent intent = new Intent(this, AccountActivity.class);
-            // TODO: 到时候要加入识别码
-            startActivity(intent);
+            AccountActivity.start(this, AccountActivity.TYPE_LOGIN);
             finish();
         } else {
             setContentView(R.layout.activity_main);
@@ -105,52 +85,11 @@ public class HomeActivity extends ActionBarActivity implements SwipeRefreshLayou
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        connService();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unbindService(conn);
-    }
-
-    private void connService() {
-        Intent intent = new Intent(this, MailService.class);
-        if (!bindService(intent, conn, BIND_AUTO_CREATE)) {
-            throw new RuntimeException("Can not bind MailService.");
-        }
-    }
-
-    @Override
     public void onRefresh() {
         try {
             mailService.syncFolder(accounts.get(0).getId(), "INBOX");
         } catch (RemoteException e) {
             Logger.e("Can not bind Service");
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

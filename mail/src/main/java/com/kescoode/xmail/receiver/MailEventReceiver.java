@@ -26,6 +26,6 @@ public class MailEventReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Object event = intent.getParcelableExtra(AppConstant.Event.TAG);
         bus.post(event);
-        Logger.e("receive event: %s", event.getClass().getCanonicalName());
+        Logger.d("receive event: %s", event.getClass().getCanonicalName());
     }
 }

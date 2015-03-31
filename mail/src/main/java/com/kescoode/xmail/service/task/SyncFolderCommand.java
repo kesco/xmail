@@ -37,7 +37,6 @@ public class SyncFolderCommand extends Command {
             remoteStore.checkSettings();
             syncFolder(folder);
             folder.setLastUpdate(System.currentTimeMillis());
-
             FolderDao dao = new FolderDao(context);
             dao.updateFolder4Id(folder);
         } catch (MessagingException e) {
@@ -73,8 +72,9 @@ public class SyncFolderCommand extends Command {
         } else {
             // TODO: 这部分到时候还要确定怎么做，我感觉现在这样做是有问题的
             fetchDate = new Date(lastUpdate);
-            folder.setUnreadMessageCount(total - folder.getMessageCount() + folder.getUnreadMessageCount());
         }
+        int news = total - folder.getMessageCount();
+        folder.setUnreadMessageCount(news + folder.getUnreadMessageCount());
         folder.setMessageCount(total);
         folder.setFlaggedCount(flagged);
 
@@ -169,7 +169,7 @@ public class SyncFolderCommand extends Command {
                 }
 
         );
-
+        sendBroadCaset(new SyncFolderEvent(folder.getId(), total, news));
         folder.close();
         remote.close();
     }

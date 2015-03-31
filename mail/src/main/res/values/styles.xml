@@ -1,8 +1,9 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="MailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/blue_sky_1</item>
+        <item name="colorPrimaryDark">@color/blue_sky_2</item>
+        <item name="colorAccent">@color/blue</item>
     </style>
 
 </resources>
