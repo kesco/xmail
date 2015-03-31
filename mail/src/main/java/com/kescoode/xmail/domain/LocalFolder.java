@@ -2,15 +2,10 @@ package com.kescoode.xmail.domain;
 
 import android.content.Context;
 import android.database.Cursor;
-
 import com.fsck.k9.mail.*;
 import com.kescoode.xmail.db.EmailDao;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 邮件文件夹本地映射的业务对象
@@ -26,9 +21,8 @@ public class LocalFolder extends Folder<LocalEmail> {
     private int totalCount;
     private int unReadCount;
     private int flaggedCount;
-    private volatile long updateTime;
 
-    public LocalFolder(Context context, Account account,Cursor cursor) {
+    public LocalFolder(Context context, Account account, Cursor cursor) {
         this.context = context;
         this.account = account;
         this.id = cursor.getLong(0);
@@ -36,7 +30,7 @@ public class LocalFolder extends Folder<LocalEmail> {
         this.totalCount = cursor.getInt(3);
         this.unReadCount = cursor.getInt(4);
         this.flaggedCount = cursor.getInt(5);
-        this.updateTime = cursor.getLong(6);
+        setLastUpdate(cursor.getLong(6));
     }
 
     public LocalFolder(Context context, Account account, Folder remote) throws MessagingException {
@@ -46,7 +40,7 @@ public class LocalFolder extends Folder<LocalEmail> {
         this.totalCount = remote.getMessageCount();
         this.unReadCount = remote.getUnreadMessageCount();
         this.flaggedCount = remote.getFlaggedMessageCount();
-        this.updateTime = remote.getLastUpdate();
+        setLastUpdate(remote.getLastUpdate());
     }
 
     @Override
@@ -81,7 +75,6 @@ public class LocalFolder extends Folder<LocalEmail> {
     }
 
 
-
     @Override
     public int getMessageCount() throws MessagingException {
         return totalCount;
@@ -95,6 +88,18 @@ public class LocalFolder extends Folder<LocalEmail> {
     @Override
     public int getFlaggedMessageCount() throws MessagingException {
         return flaggedCount;
+    }
+
+    public void setMessageCount(int total) {
+        this.totalCount = total;
+    }
+
+    public void setUnreadMessageCount(int unread) {
+        this.unReadCount = unread;
+    }
+
+    public void setFlaggedCount(int flagged) {
+        this.flaggedCount = flagged;
     }
 
     @Override
@@ -163,9 +168,13 @@ public class LocalFolder extends Folder<LocalEmail> {
         return name;
     }
 
-    @Deprecated
-    public long getUpdateTime() {
-        return updateTime;
+    public synchronized void setLastUpdate(long current) {
+        try {
+            /* 因为我们没有做Push的功能现在，所以先用LastChecked代替 */
+            setLastChecked(current);
+        } catch (MessagingException e) {
+            /* 不会发生的异常 */
+        }
     }
 
     public long getAccountId() {

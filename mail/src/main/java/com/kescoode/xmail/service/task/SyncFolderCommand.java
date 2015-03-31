@@ -1,27 +1,18 @@
 package com.kescoode.xmail.service.task;
 
 import android.content.Context;
-
-import com.fsck.k9.mail.FetchProfile;
-import com.fsck.k9.mail.Folder;
-import com.fsck.k9.mail.Message;
-import com.fsck.k9.mail.MessageRetrievalListener;
-import com.fsck.k9.mail.MessagingException;
-import com.fsck.k9.mail.Part;
+import com.fsck.k9.mail.*;
 import com.fsck.k9.mail.internet.MessageExtractor;
 import com.fsck.k9.mail.store.RemoteStore;
 import com.kescoode.adk.log.Logger;
+import com.kescoode.xmail.db.FolderDao;
 import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.LocalFolder;
 import com.kescoode.xmail.domain.LocalStore;
 import com.kescoode.xmail.event.SyncFolderEvent;
 import com.kescoode.xmail.service.task.internal.Command;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 同步文件夹，目前只做Pull，不做Push
@@ -45,9 +36,13 @@ public class SyncFolderCommand extends Command {
         try {
             remoteStore.checkSettings();
             syncFolder(folder);
+            folder.setLastUpdate(System.currentTimeMillis());
+
+            FolderDao dao = new FolderDao(context);
+            dao.updateFolder4Id(folder);
         } catch (MessagingException e) {
             Logger.e(e.getMessage());
-            sendBroadCaset(new SyncFolderEvent(folder.getId(),SyncFolderEvent.FAIL,SyncFolderEvent.FAIL));
+            sendBroadCaset(new SyncFolderEvent(folder.getId(), SyncFolderEvent.FAIL, SyncFolderEvent.FAIL));
         }
     }
 
@@ -63,15 +58,28 @@ public class SyncFolderCommand extends Command {
         folder.open(Folder.OPEN_MODE_RW);
         remote.open(Folder.OPEN_MODE_RW);
 
-        // TODO: 以后要与本地对比，存入数据库
         int total = remote.getMessageCount();
         int unread = remote.getUnreadMessageCount();
         int flagged = remote.getFlaggedMessageCount();
-
         Logger.d("Remote Server:\ntotal: %d\nunread: %d\nflagged: %d", total, unread, flagged);
 
+        Date fetchDate;
+        long lastUpdate = folder.getLastUpdate();
+        if (lastUpdate == 0) {
+            /* 默认从2000年1月1日开始算起 */
+            GregorianCalendar calendar = new GregorianCalendar(2000, 1, 1);
+            fetchDate = calendar.getTime();
+            folder.setUnreadMessageCount(total);
+        } else {
+            // TODO: 这部分到时候还要确定怎么做，我感觉现在这样做是有问题的
+            fetchDate = new Date(lastUpdate);
+            folder.setUnreadMessageCount(total - folder.getMessageCount() + folder.getUnreadMessageCount());
+        }
+        folder.setMessageCount(total);
+        folder.setFlaggedCount(flagged);
+
         // TODO: 目前是把邮件的所有部分都拉过来，以后做附件的时候优化
-        List<? extends Message> remoteMessages = remote.getMessages(1, total, new Date(2000, 1, 1), null);
+        List<? extends Message> remoteMessages = remote.getMessages(1, total, fetchDate, null);
         List<? extends Message> syncEmails = new ArrayList<>();
         final List<Message> smallEmails = new ArrayList<>();
         final List<Message> largerEmails = new ArrayList<>();

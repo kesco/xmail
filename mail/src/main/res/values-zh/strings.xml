@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">邮我</string>
+    <string name="hint_email">用户邮箱</string>
+    <string name="hint_email_passwd">邮箱密码</string>
+    <string name="login">登录</string>
+</resources>

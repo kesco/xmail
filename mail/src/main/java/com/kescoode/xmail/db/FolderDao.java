@@ -45,7 +45,7 @@ public class FolderDao extends DataDelegate {
             values.put(FolderSchema.TOTAL_COUNT, folder.getMessageCount());
             values.put(FolderSchema.UNREAD_COUNT, folder.getUnreadMessageCount());
             values.put(FolderSchema.FLAGGED_COUNT, folder.getFlaggedMessageCount());
-            values.put(FolderSchema.UPDATE_TIME, folder.getUpdateTime());
+            values.put(FolderSchema.UPDATE_TIME, folder.getLastUpdate());
         } catch (MessagingException e) {
             /* 永远不会触发 */
         }
@@ -99,6 +99,27 @@ public class FolderDao extends DataDelegate {
         }
         cursor.close();
         return folder;
+    }
+
+    /**
+     * 更新邮件文件夹状态到数据库
+     *
+     * @return 更新的文件夹ID
+     */
+    public int updateFolder4Id(LocalFolder folder) {
+        ContentValues values = new ContentValues();
+        try {
+            values.put(FolderSchema.ACCOUNT_ID, folder.getAccountId());
+            values.put(FolderSchema.NAME, folder.getName());
+            values.put(FolderSchema.TOTAL_COUNT, folder.getMessageCount());
+            values.put(FolderSchema.UNREAD_COUNT, folder.getUnreadMessageCount());
+            values.put(FolderSchema.FLAGGED_COUNT, folder.getFlaggedMessageCount());
+            values.put(FolderSchema.UPDATE_TIME, folder.getLastUpdate());
+        } catch (MessagingException e) {
+            /* 永远不会触发 */
+        }
+        return context.getContentResolver().update(parseUri(TABLE_NAME), values, "_id = ?",
+                new String[]{String.valueOf(folder.getId())});
     }
 
     @Override

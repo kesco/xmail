@@ -133,9 +133,9 @@ public class DataProvider extends ContentProvider {
                       String[] selectionArgs) {
         int n = URI_MATCHER.match(uri);
         String table = TABLES.get(n);
-        if (n % 2 != 0) {
-            throw new RuntimeException("The mime type get from the uri must be an even number");
-        }
+//        if (n % 2 != 0) {
+//            throw new RuntimeException("The mime type get from the uri must be an even number");
+//        }
         int index = DBManager.getWritableDatabase().update(table, values, selection, selectionArgs);
         Logger.d("Uri: %s,\nReturn: %d", uri.toString(), index);
         return index;
