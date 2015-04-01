@@ -30,24 +30,25 @@ public class AppBar extends LinearLayout {
     }
 
     public AppBar(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs, R.attr.appBarStyle);
     }
 
     public AppBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOrientation(VERTICAL);
-        readAttr(context, attrs);
+        readAttr(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AppBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         setOrientation(VERTICAL);
-        readAttr(context,attrs);
+        readAttr(context, attrs, defStyleAttr);
     }
 
-    private void readAttr(Context context,AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AppBarAttrs);
+    private void readAttr(Context context, AttributeSet attrs, int defStyleAttr) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AppBarAttrs,
+                defStyleAttr, R.style.Widget_MailTheme_AppBar);
         if (a != null) {
             try {
                 int appBarColor = a.getColor(R.styleable.AppBarAttrs_toolbar_background,
