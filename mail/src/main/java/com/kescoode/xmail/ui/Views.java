@@ -1,8 +1,9 @@
 package com.kescoode.xmail.ui;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
-import com.kescoode.xmail.R;
 
 /**
  * View工具类
@@ -23,4 +24,19 @@ public class Views {
         return (T) target.findViewById(id);
     }
 
+    public static void setBackground(View target, Drawable drawable) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            target.setBackground(drawable);
+        } else {
+            target.setBackgroundDrawable(drawable);
+        }
+    }
+
+    public static Drawable getDrawable(View target, int resourseId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return target.getResources().getDrawable(resourseId, null);
+        } else {
+            return target.getResources().getDrawable(resourseId);
+        }
+    }
 }
