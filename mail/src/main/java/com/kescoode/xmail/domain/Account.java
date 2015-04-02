@@ -230,4 +230,7 @@ public class Account implements StoreConfig {
         return 24;
     }
 
+    public String getUserEmail() {
+        return name;
+    }
 }

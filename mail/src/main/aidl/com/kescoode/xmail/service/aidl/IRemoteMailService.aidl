@@ -1,5 +1,7 @@
 package com.kescoode.xmail.service.aidl;
 
+import com.kescoode.xmail.domain.MailBuilder;
+
 /**
  * 与MailService交互的AIDL
  */
@@ -19,5 +21,10 @@ interface IRemoteMailService {
      * 更新文件夹
      */
     void syncFolder(long accountId, String folder);
+
+    /**
+     * 发送邮件
+     */
+    void sendMail(long accountId, in MailBuilder builder);
 
 }

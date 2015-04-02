@@ -3,16 +3,16 @@ package com.kescoode.xmail.service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 
 import com.fsck.k9.mail.MessagingException;
+import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.controller.MailManager;
-import com.kescoode.xmail.domain.Account;
-import com.kescoode.xmail.domain.EmailConfig;
-import com.kescoode.xmail.domain.LocalFolder;
-import com.kescoode.xmail.domain.LocalStore;
+import com.kescoode.xmail.domain.*;
 import com.kescoode.xmail.service.aidl.IRemoteMailService;
 import com.kescoode.xmail.service.internal.CoreService;
+import com.kescoode.xmail.service.task.SendMailCommand;
 import com.kescoode.xmail.service.task.SettingsCheckCommand;
 import com.kescoode.xmail.service.task.SyncFolderCommand;
 
@@ -50,6 +50,12 @@ public class MailService extends CoreService {
             } catch (MessagingException e) {
                 /* 根本不会异常 */
             }
+        }
+
+        @Override
+        public void sendMail(long accountId, MailBuilder builder) throws RemoteException {
+            Account account = manager.getAccount(accountId);
+            executor.execute(new SendMailCommand(MailService.this, account, builder));
         }
     };
 
