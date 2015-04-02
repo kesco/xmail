@@ -1,7 +1,6 @@
 package com.kescoode.xmail.domain;
 
 import android.content.Context;
-
 import com.fsck.k9.mail.Folder;
 import com.fsck.k9.mail.MessagingException;
 import com.fsck.k9.mail.Store;
@@ -28,22 +27,18 @@ public class LocalStore extends Store {
         this.account = account;
     }
 
-    public void syncRemote(List<? extends Folder> remotes, boolean refresh) {
+    public void syncRemote(List<? extends Folder> remotes) {
         FolderDao dao = new FolderDao(context);
-        if (refresh) {
-            // TODO: 加入更新Folders
-        } else {
-            folders = new ArrayList<>();
-            for (Folder remote : remotes) {
-                try {
-                    remote.open(Folder.OPEN_MODE_RO);
-                    LocalFolder folder = new LocalFolder(context, account, remote);
-                    remote.close();
-                    dao.insertFolder2DB(folder);
-                    folders.add(folder);
-                } catch (MessagingException e) {
-                    Logger.e("Error in get infomation from Folder %s", remote.getName());
-                }
+        folders = new ArrayList<>();
+        for (Folder remote : remotes) {
+            try {
+                remote.open(Folder.OPEN_MODE_RO);
+                LocalFolder folder = new LocalFolder(context, account, remote);
+                remote.close();
+                dao.insertFolder2DB(folder);
+                folders.add(folder);
+            } catch (MessagingException e) {
+                Logger.e("Error in get infomation from Folder %s", remote.getName());
             }
         }
     }

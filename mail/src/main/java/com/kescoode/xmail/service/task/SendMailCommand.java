@@ -17,7 +17,7 @@ import com.kescoode.xmail.service.task.internal.Command;
 public class SendMailCommand extends Command {
     private final MailBuilder mailBuilder;
 
-    public SendMailCommand(Context context, Account account,MailBuilder builder) {
+    public SendMailCommand(Context context, Account account, MailBuilder builder) {
         super(context, account);
         mailBuilder = builder;
     }
@@ -26,7 +26,7 @@ public class SendMailCommand extends Command {
     public void task() {
         try {
             Transport transport = account.getTransport();
-            Message mail = mailBuilder.build(account);
+            Message mail = mailBuilder.build(context, account);
             transport.sendMessage(mail);
         } catch (MessagingException e) {
             // TODO: 改为发送事件通知

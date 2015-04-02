@@ -43,7 +43,7 @@ public class SettingsCheckCommand extends Command {
             /* 检测接收服务器配置 */
             remoteStore.checkSettings();
             manager.addAccount(account);
-            localStore.syncRemote(remoteStore.getPersonalNamespaces(false), false);
+            localStore.syncRemote(remoteStore.getPersonalNamespaces(false));
             sendBroadCaset(new SettingCheckEvent(true, SettingCheckEvent.Type.RECEIVE));
         } catch (MessagingException e) {
             sendBroadCaset(new SettingCheckEvent(false, SettingCheckEvent.Type.RECEIVE));

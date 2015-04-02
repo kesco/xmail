@@ -23,6 +23,8 @@ public class AttachmentDao extends DataDelegate {
         super(context);
     }
 
+    
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_TABLE);

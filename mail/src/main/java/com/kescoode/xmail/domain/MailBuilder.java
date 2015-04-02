@@ -1,14 +1,21 @@
 package com.kescoode.xmail.domain;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.fsck.k9.mail.Address;
+import com.fsck.k9.mail.Body;
 import com.fsck.k9.mail.Message;
 import com.fsck.k9.mail.MessagingException;
-import com.fsck.k9.mail.internet.MimeMessage;
-import com.fsck.k9.mail.internet.TextBody;
+import com.fsck.k9.mail.internet.*;
+import com.kescoode.xmail.domain.internal.TempFileBody;
+import com.kescoode.xmail.domain.internal.TempFileMessageBody;
+import org.apache.james.mime4j.codec.EncoderUtil;
+import org.apache.james.mime4j.util.MimeUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 包含Mail信息，用于IPC
@@ -19,9 +26,9 @@ public class MailBuilder implements Parcelable {
     private String toList;
     private String ccList;
     private String bccList;
-
     private String subject;
     private String content;
+    private List<String> attachments = new ArrayList<>();
 
     public MailBuilder() {
     }
@@ -32,15 +39,15 @@ public class MailBuilder implements Parcelable {
         bccList = source.readString();
         subject = source.readString();
         content = source.readString();
+        source.readStringList(attachments);
     }
 
     /**
-     *
      * @param account
      * @return
      * @throws MessagingException
      */
-    public MimeMessage build(Account account) throws MessagingException {
+    public MimeMessage build(Context context, Account account) throws MessagingException {
         MimeMessage mail = new MimeMessage();
         mail.setSentDate(new Date(), true);
         /* 设置地址信息 */
@@ -52,7 +59,14 @@ public class MailBuilder implements Parcelable {
 
         // TODO: 加入附件支持
         TextBody textContent = generateTextBody(content);
-        mail.setBody(textContent);
+        if (attachments.size() != 0) {
+            MimeMultipart mp = new MimeMultipart();
+            mp.addBodyPart(new MimeBodyPart(textContent, "text/plain"));
+            addAttachmentsToMail(context, mp);
+            MimeMessageHelper.setBody(mail, mp);
+        } else {
+            MimeMessageHelper.setBody(mail, textContent);
+        }
         return mail;
     }
 
@@ -82,6 +96,29 @@ public class MailBuilder implements Parcelable {
         return body;
     }
 
+    private void addAttachmentsToMail(Context context, MimeMultipart mp) throws MessagingException {
+        Body body;
+        for (String path : attachments) {
+            LocalAttachment attachment = new LocalAttachment(context, path);
+            if (MimeUtil.isMessage(attachment.getMime())) {
+                body = new TempFileMessageBody(attachment.getPath());
+            } else {
+                body = new TempFileBody(attachment.getPath());
+            }
+            MimeBodyPart bp = new MimeBodyPart(body);
+            bp.addHeader(MimeHeader.HEADER_CONTENT_TYPE, String.format(
+                    "%s;\n name=\"%s\"", attachment.getMime(), EncoderUtil
+                            .encodeIfNecessary(attachment.getName(),
+                                    EncoderUtil.Usage.WORD_ENTITY, 7)));
+
+            bp.setEncoding(MimeUtility.getEncodingforType(attachment.getMime()));
+            bp.addHeader(MimeHeader.HEADER_CONTENT_DISPOSITION, String.format(
+                    "attachment;\n filename=\"%s\";\n size=%d",
+                    attachment.getName(), attachment.getSize()));
+            mp.addBodyPart(bp);
+        }
+    }
+
     @Override
     public int describeContents() {
         return hashCode();
@@ -94,6 +131,7 @@ public class MailBuilder implements Parcelable {
         dest.writeString(bccList);
         dest.writeString(subject);
         dest.writeString(content);
+        dest.writeStringList(attachments);
     }
 
     public static Parcelable.Creator<MailBuilder> CREATOR = new Parcelable.Creator<MailBuilder>() {
@@ -130,6 +168,11 @@ public class MailBuilder implements Parcelable {
 
     public MailBuilder setContent(String content) {
         this.content = content;
+        return this;
+    }
+
+    public MailBuilder addAttachment(String path) {
+        this.attachments.add(path);
         return this;
     }
 }

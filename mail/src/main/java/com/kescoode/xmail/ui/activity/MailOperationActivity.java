@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.view.View;
+import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.R;
+import com.kescoode.xmail.domain.LocalAttachment;
 import com.kescoode.xmail.domain.MailBuilder;
 import com.kescoode.xmail.ui.activity.internal.MailConnActivity;
 
@@ -32,12 +34,16 @@ public class MailOperationActivity extends MailConnActivity {
                 MailBuilder builder = new MailBuilder();
                 builder.setSubject("Test")
                         .setContent("test")
-                        .setToList("bringwin808@foxmail.com");
+                        .setToList("bringwin808@foxmail.com")
+                        .addAttachment("/sdcard/test.json");
                 try {
                     mailService.sendMail(1, builder);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+//                LocalAttachment attachment = new LocalAttachment(MailOperationActivity.this,
+//                        "/sdcard/test.json");
+//                Logger.e("HAHA", attachment.toString());
             }
         });
     }
