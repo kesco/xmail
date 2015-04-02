@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.kescoode.xmail.R;
-import com.kescoode.xmail.ui.Views;
+import com.kescoode.adk.view.Views;
 import com.kescoode.xmail.ui.widget.internal.InsetColorDrawable;
 
 /**

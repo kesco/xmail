@@ -1,4 +1,4 @@
-package com.kescoode.xmail.ui;
+package com.kescoode.adk.view;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;

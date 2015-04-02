@@ -6,34 +6,42 @@ import android.os.RemoteException;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.db.FolderDao;
 import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.LocalFolder;
+import com.kescoode.xmail.event.SyncFolderEvent;
 import com.kescoode.xmail.service.MailService;
 import com.kescoode.xmail.service.TimerService;
 import com.kescoode.xmail.ui.activity.internal.MailConnActivity;
 import com.kescoode.xmail.ui.adapter.MailListAdapter;
+import com.melnykov.fab.FloatingActionButton;
+import de.greenrobot.event.EventBus;
 
 import java.util.List;
 
 public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     @InjectView(R.id.srl_index)
-    SwipeRefreshLayout mSrlIndex;
+    SwipeRefreshLayout srlIndex;
 
     @InjectView(R.id.rcv_mails)
-    RecyclerView mRcvMails;
+    RecyclerView rcVMails;
+
+    @InjectView(R.id.fab_new)
+    FloatingActionButton fabNew;
 
     private MailListAdapter adapter;
 
     private MailManager mailManager;
     private List<Account> accounts;
+
+    private EventBus bus = EventBus.getDefault();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +76,22 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
     }
 
     private void initViews() {
-        mSrlIndex.setOnRefreshListener(this);
-        mSrlIndex.setColorSchemeColors(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        srlIndex.setColorSchemeResources(R.color.purple,
+                R.color.green_light,
+                R.color.orange_light,
+                R.color.red_light);
+        srlIndex.setOnRefreshListener(this);
 
-        mRcvMails.setHasFixedSize(true);
-        mRcvMails.setLayoutManager(new LinearLayoutManager(this));
+        rcVMails.setHasFixedSize(true);
+        rcVMails.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MailListAdapter(this);
-        mRcvMails.setAdapter(adapter);
+        rcVMails.setAdapter(adapter);
 
         FolderDao dao = new FolderDao(this);
         LocalFolder folder = dao.selectFolder4Name(accounts.get(0), "INBOX");
         adapter.setDataSet(folder);
+
+        fabNew.attachToRecyclerView(rcVMails);
     }
 
     @Override
@@ -92,4 +102,33 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
             Logger.e("Can not bind Service");
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!bus.isRegistered(this)) {
+            bus.register(this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (bus.isRegistered(this)) {
+            bus.unregister(this);
+        }
+    }
+
+    public void onEvent(SyncFolderEvent event) {
+        srlIndex.setRefreshing(false);
+        FolderDao dao = new FolderDao(this);
+        LocalFolder folder = dao.selectFolder4Name(accounts.get(0), "INBOX");
+        adapter.setDataSet(folder);
+    }
+
+    @OnClick(R.id.fab_new)
+    void onFabNewClick() {
+        MailOperationActivity.startMailOperation(this, MailOperationActivity.OPERATION_WRITE);
+    }
+
 }

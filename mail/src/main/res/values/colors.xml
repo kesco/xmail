@@ -8,4 +8,16 @@
     <color name="blue">#448AFF</color>
     <color name="blue_sky_1">#03A9F4</color>
     <color name="blue_sky_2">#0288D1</color>
+    <color name="blue_sky_3">#ff00ddff</color>
+
+    <color name="orange_light">#ffffbb33</color>
+    <color name="orange_dark">#ffff8800</color>
+
+    <color name="purple">#ffaa66cc</color>
+
+    <color name="red_dark">#ffcc0000</color>
+    <color name="red_light">#ffff4444</color>
+
+    <color name="green_light">#ff99cc00</color>
+
 </resources>
