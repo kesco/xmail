@@ -6,9 +6,13 @@ import android.os.RemoteException;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.fsck.k9.mail.Folder;
 import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.controller.MailManager;
@@ -36,12 +40,13 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
     @InjectView(R.id.fab_new)
     FloatingActionButton fabNew;
 
-    private MailListAdapter adapter;
-
-    private MailManager mailManager;
-    private List<Account> accounts;
-
     private EventBus bus = EventBus.getDefault();
+
+    private MailListAdapter adapter;
+    private MailManager mailManager;
+
+    private Account currentAccount;
+    private LocalFolder currentFolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +69,16 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
     private void initData() {
         mailManager = MailManager.getSingleTon(getApplicationContext());
         mailManager.dB2Account();
-        accounts = mailManager.getAccounts();
+        List<Account> accounts = mailManager.getAccounts();
         if (accounts.size() == 0) {
             AccountActivity.start(this, AccountActivity.TYPE_LOGIN);
             finish();
         } else {
             setContentView(R.layout.activity_main);
             ButterKnife.inject(this);
+
+            currentAccount = accounts.get(0);
+            setFolder(currentAccount.getFolder(currentAccount.getInboxFolderName()));
             initViews();
         }
     }
@@ -87,9 +95,7 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
         adapter = new MailListAdapter(this);
         rcVMails.setAdapter(adapter);
 
-        FolderDao dao = new FolderDao(this);
-        LocalFolder folder = dao.selectFolder4Name(accounts.get(0), "INBOX");
-        adapter.setDataSet(folder);
+        adapter.setDataSet(currentFolder);
 
         fabNew.attachToRecyclerView(rcVMails);
     }
@@ -97,7 +103,7 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         try {
-            mailService.syncFolder(accounts.get(0).getId(), "INBOX");
+            mailService.syncFolder(currentAccount.getId(), currentFolder.getName());
         } catch (RemoteException e) {
             Logger.e("Can not bind Service");
         }
@@ -121,9 +127,7 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
 
     public void onEvent(SyncFolderEvent event) {
         srlIndex.setRefreshing(false);
-        FolderDao dao = new FolderDao(this);
-        LocalFolder folder = dao.selectFolder4Name(accounts.get(0), "INBOX");
-        adapter.setDataSet(folder);
+        adapter.setDataSet(currentFolder);
     }
 
     @OnClick(R.id.fab_new)
@@ -131,4 +135,27 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
         MailOperationActivity.startMailOperation(this, MailOperationActivity.OPERATION_WRITE);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_home_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // TODO: 加入关于提示
+                break;
+            case R.id.action_search:
+                // TODO: 加入搜索Action Mode
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void setFolder(LocalFolder folder) {
+        currentFolder = folder;
+        getSupportActionBar().setTitle(currentAccount.getDisplayFolderName(currentFolder.getName()));
+    }
 }

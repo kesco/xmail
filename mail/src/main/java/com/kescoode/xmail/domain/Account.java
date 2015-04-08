@@ -8,8 +8,11 @@ import com.fsck.k9.mail.NetworkType;
 import com.fsck.k9.mail.Transport;
 import com.fsck.k9.mail.store.RemoteStore;
 import com.fsck.k9.mail.store.StoreConfig;
+import com.kescoode.xmail.R;
 import com.kescoode.xmail.db.EmailConfigDao;
+import com.kescoode.xmail.db.FolderDao;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,7 +52,6 @@ public class Account implements StoreConfig {
         compressionMap.put(NetworkType.MOBILE, true);
         compressionMap.put(NetworkType.OTHER, true);
         compressionMap.put(NetworkType.WIFI, true);
-        /* 从K9源码来看，IMAP和POP3的收件箱名称都是一样的 */
         inboxFolder = INBOX;
         this.loaclStore = new LocalStore(context, this);
         /* 读取数据库 */
@@ -58,7 +60,6 @@ public class Account implements StoreConfig {
         passwd = cursor.getString(2);
         int configId = cursor.getInt(3);
 
-        // TODO: 这里应该可以用一条SQL语句搞定的，重构的时候试下
         EmailConfigDao dao = new EmailConfigDao(context);
         emailConfig = dao.selectConfigFromDB(configId);
         String[] uris = emailConfig.getDefaultServerSettingUri(name, passwd);
@@ -73,8 +74,7 @@ public class Account implements StoreConfig {
         this.compressionMap.put(NetworkType.MOBILE, true);
         this.compressionMap.put(NetworkType.OTHER, true);
         this.compressionMap.put(NetworkType.WIFI, true);
-        /* 从K9源码来看，IMAP和POP3的收件箱名称都是一样的 */
-        this.inboxFolder = INBOX;
+        inboxFolder = INBOX;
         this.loaclStore = new LocalStore(context, this);
 
         this.name = name;
@@ -196,7 +196,7 @@ public class Account implements StoreConfig {
     }
 
     @Override
-    public void setInboxFolderName(String name) {
+    public synchronized void setInboxFolderName(String name) {
         inboxFolder = name;
     }
 
@@ -233,4 +233,18 @@ public class Account implements StoreConfig {
     public String getUserEmail() {
         return name;
     }
+
+    public String getDisplayFolderName(String folder) {
+        if (folder.equals(inboxFolder)) {
+            return context.getString(R.string.inbox);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalFolder getFolder(String folder) {
+        FolderDao dao = new FolderDao(context);
+        return dao.selectFolder4Name(this, folder);
+    }
+
 }

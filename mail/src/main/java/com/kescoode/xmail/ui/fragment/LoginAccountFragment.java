@@ -13,6 +13,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.dd.CircularProgressButton;
 import com.kescoode.adk.log.Logger;
+import com.kescoode.adk.view.Views;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.event.SettingCheckEvent;
 import com.kescoode.xmail.ui.activity.AccountActivity;
@@ -100,7 +101,7 @@ public class LoginAccountFragment extends AppFragment<AccountActivity> {
         Logger.e("Login Event: %s %s", String.valueOf(event.ok), event.type.name());
         if (event.type == SettingCheckEvent.Type.RECEIVE && event.ok) {
             cpbLogin.setProgress(100);
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            Views.delayExecuteOnUi(new Runnable() {
                 @Override
                 public void run() {
                     Intent intent = new Intent(getAct(), HomeActivity.class);
