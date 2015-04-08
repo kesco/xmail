@@ -8,6 +8,7 @@
 
     <!-- ITEM -->
     <dimen name="item_divider">8dp</dimen>
+    <dimen name="item_horizontal_margin">8dp</dimen>
     
     <!-- FloatingActionButton -->
     <dimen name="fab_margin">16dp</dimen>

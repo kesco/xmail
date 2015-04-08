@@ -2,8 +2,11 @@
 <resources>
     <color name="app_bar_shadow_start">#40000000</color>
     <color name="app_bar_shadow_end">#00000000</color>
+    
+    <color name="transparent">@android:color/transparent</color>
 
     <color name="white">@android:color/white</color>
+    <color name="white_2">#F6F6EF</color>
     <color name="white_gray">#fafafa</color>
 
     <color name="blue">#448AFF</color>
@@ -20,5 +23,7 @@
     <color name="red_light">#ffff4444</color>
 
     <color name="green_light">#ff99cc00</color>
+
+    <color name="gray_white">#bdbdbd</color>
 
 </resources>
