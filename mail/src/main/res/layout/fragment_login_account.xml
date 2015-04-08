@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -25,10 +26,14 @@
             android:inputType="textPassword"
             android:text="@string/default_email_passwd"/>
 
-    <Button
-            android:id="@+id/btn_login"
+    <com.dd.CircularProgressButton
+            android:id="@+id/cpb_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/login"/>
+            android:layout_marginTop="@dimen/item_divider"
+            android:textColor="@color/white"
+            app:cpb_iconComplete="@drawable/action_done"
+            app:cpb_iconError="@drawable/action_failed"
+            app:cpb_textIdle="@string/login"/>
 
 </LinearLayout>

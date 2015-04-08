@@ -5,6 +5,9 @@
 
     <!--ToolBar-->
     <dimen name="toolbar_shadow_height">4dp</dimen>
+
+    <!-- ITEM -->
+    <dimen name="item_divider">8dp</dimen>
     
     <!-- FloatingActionButton -->
     <dimen name="fab_margin">16dp</dimen>
