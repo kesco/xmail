@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/adk/adk.iml" filepath="$PROJECT_DIR$/adk/adk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/adk-ui/adk-ui.iml" filepath="$PROJECT_DIR$/adk-ui/adk-ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demos/demos.iml" filepath="$PROJECT_DIR$/demos/demos.iml" />
       <module fileurl="file://$PROJECT_DIR$/mail/mail.iml" filepath="$PROJECT_DIR$/mail/mail.iml" />
       <module fileurl="file://$PROJECT_DIR$/mail-library/mail-library.iml" filepath="$PROJECT_DIR$/mail-library/mail-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/xmail.iml" filepath="$PROJECT_DIR$/xmail.iml" />

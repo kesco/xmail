@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.kescoode.xmail.R;
 import com.kescoode.adk.view.Views;
@@ -24,6 +25,7 @@ public class AppBar extends LinearLayout {
     private XToolbar toolbar;
     private int shadowHeightPx;
     private InsetColorDrawable background;
+    private boolean hasMarginSet = false;
 
     public AppBar(Context context) {
         this(context, null);
@@ -117,4 +119,26 @@ public class AppBar extends LinearLayout {
         super.setOrientation(orientation);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        setMarginsWithoutShadow();
+    }
+
+    /**
+     * 修改因为加入阴影导致的空白位移</p>
+     * 有Bug，暂缓使用
+     */
+    private void setMarginsWithoutShadow() {
+        if (!hasMarginSet) {
+            if (getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
+                int bottomMargin = layoutParams.bottomMargin - shadowHeightPx;
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin,
+                        bottomMargin);
+                requestLayout();
+                hasMarginSet = true;
+            }
+        }
+    }
 }

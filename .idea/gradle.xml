@@ -10,6 +10,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/adk" />
+            <option value="$PROJECT_DIR$/adk-ui" />
+            <option value="$PROJECT_DIR$/demos" />
             <option value="$PROJECT_DIR$/mail" />
             <option value="$PROJECT_DIR$/mail-library" />
           </set>

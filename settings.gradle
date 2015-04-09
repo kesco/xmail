@@ -1,3 +1,5 @@
 include ':mail'
 include ':mail-library'
 include ':adk'
+include ':adk-ui'
+include ':demos'
