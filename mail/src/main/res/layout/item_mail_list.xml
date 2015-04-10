@@ -4,8 +4,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/item_horizontal_margin"
-        android:layout_marginRight="@dimen/item_horizontal_margin"
+        android:layout_marginLeft="@dimen/item_mail_list_horizontal_margin"
+        android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
         app:contentPadding="0dp"
         app:cardCornerRadius="3dp"
         app:cardBackgroundColor="@color/white"
@@ -14,41 +14,63 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:minHeight="@dimen/item_mail_list_vertical_height"
             android:background="@drawable/selector_mail_list_item">
 
-        <TextView
-                android:id="@+id/tv_title"
+        <com.kescoode.adk.ui.CircleLogo
+                android:id="@+id/cl_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/item_mail_list_horizontal_margin"
+                android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
+                app:logo_size="@dimen/item_mail_list_logo_size"
+                app:logo_textSize="@dimen/item_mail_list_logo_text_size"/>
+
+        <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                />
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/cl_people">
 
-        <TextView
-                android:id="@+id/tv_sender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/tv_title"
-                android:textSize="18sp"
-                />
+            <TextView
+                    android:id="@+id/tv_subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/item_mail_list_vertical_margin"
+                    android:layout_marginBottom="@dimen/item_mail_list_vertical_margin"
+                    android:maxLength="8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/item_mail_list_title_text_size"
+                    android:textStyle="bold"/>
 
-        <TextView
-                android:id="@+id/tv_preview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/tv_sender"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/tv_sender"
-                android:layout_toRightOf="@id/tv_sender"
-                />
-    </RelativeLayout>
+            <com.kescoode.xmail.ui.widget.LineDivider
+                    android:id="@+id/ld_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/tv_subject"/>
 
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/selector_mail_list_item">
+            <TextView
+                    android:id="@+id/tv_preview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/item_mail_list_vertical_margin"
+                    android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
+                    android:layout_below="@+id/ld_divider"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/item_mail_list_preview_text_size"/>
 
+            <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/item_mail_list_vertical_margin"
+                    android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
+                    android:layout_above="@+id/ld_divider"
+                    android:layout_alignParentRight="true"
+                    android:text="时间"
+                    android:textSize="@dimen/item_mail_list_date_text_size"/>
+        </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

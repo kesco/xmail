@@ -3,13 +3,21 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+
     <!--ToolBar-->
     <dimen name="toolbar_shadow_height">4dp</dimen>
 
-    <!-- ITEM -->
-    <dimen name="item_divider">8dp</dimen>
-    <dimen name="item_horizontal_margin">8dp</dimen>
-    
+    <!-- Mail List Item -->
+    <dimen name="item_mail_list_divider">8dp</dimen>
+    <dimen name="item_mail_list_horizontal_margin">8dp</dimen>
+    <dimen name="item_mail_list_vertical_margin">4dp</dimen>
+    <dimen name="item_mail_list_vertical_height">68dp</dimen>
+    <dimen name="item_mail_list_logo_size">48dp</dimen>
+    <dimen name="item_mail_list_logo_text_size">25sp</dimen>
+    <dimen name="item_mail_list_title_text_size">16sp</dimen>
+    <dimen name="item_mail_list_date_text_size">10sp</dimen>
+    <dimen name="item_mail_list_preview_text_size">12sp</dimen>
+
     <!-- FloatingActionButton -->
     <dimen name="fab_margin">16dp</dimen>
 </resources>

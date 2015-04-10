@@ -7,8 +7,4 @@
         <attr name="logo_textColor" format="color"/>
         <attr name="logo_textSize" format="dimension"/>
     </declare-styleable>
-    
-    <declare-styleable name="CircleLogoTheme">
-        <attr name="circleLogoStyle" format="reference"/>
-    </declare-styleable>
 </resources>

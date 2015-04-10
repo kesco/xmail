@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import com.kescoode.adk.view.Views;
@@ -31,7 +32,6 @@ public class CircleLogo extends View {
     }
 
     public CircleLogo(Context context, AttributeSet attrs) {
-//        this(context, attrs, R.attr.circleLogoStyle);
         this(context, attrs, 0);
     }
 
@@ -80,7 +80,7 @@ public class CircleLogo extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         drawText(canvas, logoText);
     }
@@ -107,7 +107,10 @@ public class CircleLogo extends View {
         setMeasuredDimension(logoSize, logoSize);
     }
 
-    public void setLogoText(String text) {
+    public void setLogoText(@NonNull String text) {
+        if (text.length() != 1) {
+            throw new IllegalArgumentException("The input text must have 1 character length.");
+        }
         logoText = text;
         invalidate();
     }

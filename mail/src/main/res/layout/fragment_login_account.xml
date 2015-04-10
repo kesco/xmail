@@ -30,7 +30,7 @@
             android:id="@+id/cpb_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/item_divider"
+            android:layout_marginTop="@dimen/item_mail_list_divider"
             android:textColor="@color/white"
             app:cpb_iconComplete="@drawable/action_done"
             app:cpb_iconError="@drawable/action_failed"

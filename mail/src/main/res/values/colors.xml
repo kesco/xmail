@@ -24,6 +24,7 @@
 
     <color name="green_light">#ff99cc00</color>
 
+    <color name="gray">#eeeeee</color>
     <color name="gray_white">#bdbdbd</color>
 
 </resources>
