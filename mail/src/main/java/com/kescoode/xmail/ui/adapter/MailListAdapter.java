@@ -1,7 +1,6 @@
 package com.kescoode.xmail.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -10,14 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.fsck.k9.mail.Address;
 import com.kescoode.adk.graphics.MaterialColorPalette;
-import com.kescoode.adk.log.Logger;
 import com.kescoode.adk.ui.CircleLogo;
 import com.kescoode.adk.view.Views;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.db.EmailDao;
 import com.kescoode.xmail.domain.LocalEmail;
 import com.kescoode.xmail.domain.LocalFolder;
-import com.kescoode.xmail.ui.activity.MailDetailActivity;
+import com.kescoode.xmail.ui.activity.MailOperationActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,10 +93,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, MailDetailActivity.class);
-                    Logger.e("nimabe %s", message.getId());
-                    intent.putExtra("mail_id", message.getId());
-                    context.startActivity(intent);
+                    MailOperationActivity.startMailOperation4Detail(context, message.getId());
                 }
             });
         }

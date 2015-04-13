@@ -7,4 +7,6 @@
     <string name="login_label">请登录您的电子邮箱</string>
     <string name="about">关于邮我</string>
     <string name="inbox">收件箱</string>
+    <string name="search">搜索</string>
+    <string name="action_settings">设置</string>
 </resources>

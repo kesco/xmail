@@ -6,7 +6,7 @@
     <string name="title_activity_account">AccountActivity</string>
 
     <string name="about">About Xmail</string>
-    <string name="search">搜索</string>
+    <string name="search">Search</string>
 
     <!-- 邮箱文件夹 -->
     <string name="inbox">INBOX</string>
