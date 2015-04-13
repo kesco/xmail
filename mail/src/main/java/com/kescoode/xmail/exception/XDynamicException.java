@@ -1,7 +1,7 @@
 package com.kescoode.xmail.exception;
 
 /**
- * 扩招{@link RuntimeException},主要是字符串的处理
+ * 扩展{@link RuntimeException},主要是字符串的处理
  *
  * @author Kesco Lin
  */

@@ -15,6 +15,7 @@ import java.util.*;
 public class LocalFolder extends Folder<LocalEmail> {
     private final Context context;
     private final Account account;
+    private final EmailDao emailDao;
 
     private volatile long id = -1;
     private final String name;
@@ -25,6 +26,7 @@ public class LocalFolder extends Folder<LocalEmail> {
     public LocalFolder(Context context, Account account, Cursor cursor) {
         this.context = context;
         this.account = account;
+        this.emailDao = new EmailDao(context);
         this.id = cursor.getLong(0);
         this.name = cursor.getString(2);
         this.totalCount = cursor.getInt(3);
@@ -36,6 +38,7 @@ public class LocalFolder extends Folder<LocalEmail> {
     public LocalFolder(Context context, Account account, Folder remote) throws MessagingException {
         this.context = context;
         this.account = account;
+        this.emailDao = new EmailDao(context);
         this.name = remote.getName();
         this.totalCount = remote.getMessageCount();
         this.unReadCount = remote.getUnreadMessageCount();
@@ -104,7 +107,7 @@ public class LocalFolder extends Folder<LocalEmail> {
 
     @Override
     public LocalEmail getMessage(String uid) throws MessagingException {
-        return null;
+        return emailDao.selectMailsFromUid(this, uid);
     }
 
     @Override
@@ -130,10 +133,13 @@ public class LocalFolder extends Folder<LocalEmail> {
         }
         // TODO: 思考下，能用来做什么
         Map<String, String> uidMap = new HashMap<>();
-        EmailDao dao = new EmailDao(context);
         for (Message remote : messages) {
             LocalEmail email = new LocalEmail(context, this, remote);
-            dao.insertMail2DB(email);
+            if (getMessage(remote.getUid()) == null) {
+                emailDao.insertMail2DB(email);
+            } else {
+                emailDao.updateMail2DB(email);
+            }
         }
         return uidMap;
     }

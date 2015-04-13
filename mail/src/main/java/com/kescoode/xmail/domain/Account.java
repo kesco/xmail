@@ -2,7 +2,6 @@ package com.kescoode.xmail.domain;
 
 import android.content.Context;
 import android.database.Cursor;
-
 import com.fsck.k9.mail.MessagingException;
 import com.fsck.k9.mail.NetworkType;
 import com.fsck.k9.mail.Transport;
@@ -12,7 +11,6 @@ import com.kescoode.xmail.R;
 import com.kescoode.xmail.db.EmailConfigDao;
 import com.kescoode.xmail.db.FolderDao;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

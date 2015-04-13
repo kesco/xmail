@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.fsck.k9.mail.Address;
+import com.kescoode.adk.graphics.MaterialColorPalette;
 import com.kescoode.adk.log.Logger;
+import com.kescoode.adk.ui.CircleLogo;
 import com.kescoode.adk.view.Views;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.db.EmailDao;
@@ -19,13 +21,12 @@ import com.kescoode.xmail.ui.activity.MailDetailActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
- * 显示邮件的Adpater
+ * 邮件主页的邮件列表适配器
  *
- * @author Jinsen Lin
+ * @author Kesco Lin
  */
 public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.ViewHolder> {
 
@@ -67,25 +68,25 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.ViewHo
     protected static final class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTvTitle;
-        private TextView mTvSender;
         private TextView mTvPreview;
         private TextView tvDate;
+        private CircleLogo clPeople;
 
         private ViewHolder(View itemView) {
             super(itemView);
 
             mTvTitle = (TextView) itemView.findViewById(R.id.tv_subject);
-//            mTvSender = (TextView) itemView.findViewById(R.id.tv_sender);
             mTvPreview = (TextView) itemView.findViewById(R.id.tv_preview);
             tvDate = Views.findById(itemView, R.id.tv_date);
+            clPeople = Views.findById(itemView, R.id.cl_people);
         }
 
         protected void initView(final LocalEmail message, final Context context) {
             mTvTitle.setText(message.getSubject());
-            Address[] addresses = new Address[0];
-            addresses = message.getFrom();
+            Address[] addresses = message.getFrom();
             if (0 != addresses.length) {
-//                mTvSender.setText(addresses[0].getPersonal());
+                clPeople.setLogoColor(MaterialColorPalette.randomColor());
+                clPeople.setLogoText(addresses[0].getPersonal().substring(0, 1));
             }
             mTvPreview.setText(message.getPreview());
             java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);

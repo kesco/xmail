@@ -84,7 +84,28 @@ public class EmailDao extends DataDelegate {
      * @return 更新的ID
      */
     public int updateMail2DB(LocalEmail mail) {
-        throw new UnsupportedOperationException("have not code");
+        ContentValues values = new ContentValues();
+        values.put(EmailSchema.UID, mail.getUid());
+        values.put(EmailSchema.FOLDER_ID, mail.getFolderId());
+        values.put(EmailSchema.FROM_LIST, Address.pack(mail.getFrom()));
+        try {
+            values.put(EmailSchema.TO_LIST, Address.pack(mail.getRecipients(Message.RecipientType.TO)));
+            values.put(EmailSchema.CC_LIST, Address.pack(mail.getRecipients(Message.RecipientType.CC)));
+            values.put(EmailSchema.BCC_LIST, Address.pack(mail.getRecipients(Message.RecipientType.BCC)));
+        } catch (MessagingException e) {
+            /* 不会发生的异常 */
+        }
+        values.put(EmailSchema.IS_READ, mail.isRead());
+        values.put(EmailSchema.IS_FLAGGED, mail.isFlagged());
+        values.put(EmailSchema.IS_FORWARD, mail.isForward());
+        values.put(EmailSchema.TEXT_PATH, mail.getTextPath());
+        values.put(EmailSchema.HTML_PATH, mail.getHtmlPath());
+        values.put(EmailSchema.PREVIEW, mail.getPreview());
+        values.put(EmailSchema.SUBJECT, mail.getSubject());
+        values.put(EmailSchema.DATE, mail.getInternalDate().getTime());
+        values.put(EmailSchema.STATUS, mail.getStatus());
+        return context.getContentResolver().update(parseUri(TABLE_NAME), values, "uid = ?",
+                new String[]{String.valueOf(mail.getUid())});
     }
 
     /**
@@ -115,14 +136,32 @@ public class EmailDao extends DataDelegate {
     /**
      * 根据邮件ID获取邮件
      *
-     * @param folder
-     * @param id 邮件ID
+     * @param folder 所属邮箱文件夹
+     * @param id     邮件ID
      * @return 邮件对象
      */
     public LocalEmail selectMailsFromId(LocalFolder folder, long id) {
         Cursor cursor;
         LocalEmail email = null;
         cursor = select(parseUri(TABLE_NAME), "select * from email where _id = ?", id);
+        if (cursor.moveToFirst()) {
+            email = new LocalEmail(context, folder, cursor);
+        }
+        cursor.close();
+        return email;
+    }
+
+    /**
+     * 根据邮件UID获取邮件
+     *
+     * @param folder 所属邮箱文件夹
+     * @param uid 邮件UID
+     * @return 邮件对象
+     */
+    public LocalEmail selectMailsFromUid(LocalFolder folder, String uid) {
+        Cursor cursor;
+        LocalEmail email = null;
+        cursor = select(parseUri(TABLE_NAME), "select * from email where uid = ?", uid);
         if (cursor.moveToFirst()) {
             email = new LocalEmail(context, folder, cursor);
         }

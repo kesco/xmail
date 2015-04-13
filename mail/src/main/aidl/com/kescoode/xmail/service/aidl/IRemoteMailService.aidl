@@ -20,7 +20,7 @@ interface IRemoteMailService {
     /**
      * 更新文件夹
      */
-    void syncFolder(long accountId, String folder);
+    void syncFolder(long accountId, String folder, int page);
 
     /**
      * 发送邮件

@@ -3,13 +3,13 @@ package com.kescoode.xmail.service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.RemoteException;
-
 import com.fsck.k9.mail.MessagingException;
-import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.controller.MailManager;
-import com.kescoode.xmail.domain.*;
+import com.kescoode.xmail.domain.Account;
+import com.kescoode.xmail.domain.EmailConfig;
+import com.kescoode.xmail.domain.LocalStore;
+import com.kescoode.xmail.domain.MailBuilder;
 import com.kescoode.xmail.service.aidl.IRemoteMailService;
 import com.kescoode.xmail.service.internal.CoreService;
 import com.kescoode.xmail.service.task.SendMailCommand;
@@ -40,13 +40,13 @@ public class MailService extends CoreService {
         }
 
         @Override
-        public void syncFolder(long accountId, String folder) throws RemoteException {
+        public void syncFolder(long accountId, String folder, int page) throws RemoteException {
             Account account = manager.getAccount(accountId);
             LocalStore localStore = account.getLocalStore();
             try {
                 localStore.checkSettings();
                 executor.execute(new SyncFolderCommand(MailService.this, account,
-                        localStore.getFolder(folder)));
+                        localStore.getFolder(folder), page));
             } catch (MessagingException e) {
                 /* 根本不会异常 */
             }

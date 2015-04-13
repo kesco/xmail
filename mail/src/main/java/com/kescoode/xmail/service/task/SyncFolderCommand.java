@@ -12,7 +12,10 @@ import com.kescoode.xmail.domain.LocalStore;
 import com.kescoode.xmail.event.SyncFolderEvent;
 import com.kescoode.xmail.service.task.internal.Command;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 同步文件夹，目前只做Pull，不做Push
@@ -20,16 +23,27 @@ import java.util.*;
  * @author Kesco Lin
  */
 public class SyncFolderCommand extends Command {
-    private RemoteStore remoteStore;
-    private LocalStore localStore;
-    private LocalFolder folder;
+    private final RemoteStore remoteStore;
+    private final LocalStore localStore;
+    private final LocalFolder folder;
+    private final int page;
 
-    public SyncFolderCommand(Context context, Account account, LocalFolder folder) {
+    /**
+     * 构造方法
+     *
+     * @param context 上下文
+     * @param account 邮件帐户
+     * @param folder  邮件文件夹
+     * @param page    需要更新的页数，以0为基准
+     */
+    public SyncFolderCommand(Context context, Account account, LocalFolder folder, int page) {
         super(context, account);
         this.remoteStore = account.getRemoteStore();
         this.localStore = account.getLocalStore();
         this.folder = folder;
+        this.page = page + 1;
     }
+
 
     @Override
     public void task() {
@@ -61,26 +75,22 @@ public class SyncFolderCommand extends Command {
         int unread = remote.getUnreadMessageCount();
         int flagged = remote.getFlaggedMessageCount();
         Logger.d("Remote Server:\ntotal: %d\nunread: %d\nflagged: %d", total, unread, flagged);
-
-        Date fetchDate;
-        long lastUpdate = folder.getLastUpdate();
-        if (lastUpdate == 0) {
-            /* 默认从2000年1月1日开始算起 */
-            GregorianCalendar calendar = new GregorianCalendar(2000, 1, 1);
-            fetchDate = calendar.getTime();
-            folder.setUnreadMessageCount(total);
-        } else {
-            // TODO: 这部分到时候还要确定怎么做，我感觉现在这样做是有问题的
-            fetchDate = new Date(lastUpdate);
-        }
-        int news = total - folder.getMessageCount();
+        int news = Math.max(total - page * account.getDisplayCount(), 0) + 1;
+        // TODO: 这里的未读数是错误的，要改正
         folder.setUnreadMessageCount(news + folder.getUnreadMessageCount());
         folder.setMessageCount(total);
         folder.setFlaggedCount(flagged);
+        List<? extends Message> remoteMessages = remote.getMessages(news, total,
+                null /* 根据K9的源码，这里是默认为空 */, null);
+        downloadMessage(remote, remoteMessages);
+        sendBroadCaset(new SyncFolderEvent(folder.getId(), total, news));
+        folder.close();
+        remote.close();
+    }
 
+    protected void downloadMessage(final Folder remote, List<? extends Message> remoteMessages)
+            throws MessagingException {
         // TODO: 目前是把邮件的所有部分都拉过来，以后做附件的时候优化
-        List<? extends Message> remoteMessages = remote.getMessages(1, total, fetchDate, null);
-        List<? extends Message> syncEmails = new ArrayList<>();
         final List<Message> smallEmails = new ArrayList<>();
         final List<Message> largerEmails = new ArrayList<>();
 
@@ -167,11 +177,7 @@ public class SyncFolderCommand extends Command {
                     public void messagesFinished(int total) {
                     }
                 }
-
         );
-        sendBroadCaset(new SyncFolderEvent(folder.getId(), total, news));
-        folder.close();
-        remote.close();
     }
 
 }

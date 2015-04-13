@@ -7,16 +7,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.fsck.k9.mail.Folder;
 import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.controller.MailManager;
-import com.kescoode.xmail.db.FolderDao;
 import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.LocalFolder;
 import com.kescoode.xmail.event.SyncFolderEvent;
@@ -74,7 +71,7 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
             AccountActivity.start(this, AccountActivity.TYPE_LOGIN);
             finish();
         } else {
-            setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_home);
             ButterKnife.inject(this);
 
             currentAccount = accounts.get(0);
@@ -103,7 +100,7 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         try {
-            mailService.syncFolder(currentAccount.getId(), currentFolder.getName());
+            mailService.syncFolder(currentAccount.getId(), currentFolder.getName(), 0);
         } catch (RemoteException e) {
             Logger.e("Can not bind Service");
         }

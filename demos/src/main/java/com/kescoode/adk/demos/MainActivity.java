@@ -2,6 +2,8 @@ package com.kescoode.adk.demos;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,25 +18,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        clLogo = Views.findById(this, R.id.cl_logo);
 
-        findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
-            boolean reverse = false;
-
-            @Override
-            public void onClick(View v) {
-                if (reverse) {
-                    clLogo.setLogoText("L");
-                    clLogo.setLogoColor(getResources().getColor(android.R.color.holo_orange_dark));
-                } else {
-                    clLogo.setLogoText("魔");
-                    clLogo.setLogoColor(getResources().getColor(android.R.color.holo_purple));
-                }
-                reverse = !reverse;
-            }
-        });
+        RecyclerView rv = Views.findById(this, R.id.rv_demos);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(new DemosAdapter(this));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
