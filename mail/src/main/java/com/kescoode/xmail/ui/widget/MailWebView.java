@@ -49,7 +49,7 @@ public class MailWebView extends WebView {
         webSettings.setUseWideViewPort(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
         if (Build.VERSION_CODES.HONEYCOMB < Build.VERSION.SDK_INT) {
             webSettings.setDisplayZoomControls(false);
@@ -80,7 +80,12 @@ public class MailWebView extends WebView {
 
         settings.setLayoutAlgorithm(layoutAlgorithm);
     }
-    
+
+    /**
+     * 决定是否加载网络内容
+     *
+     * @param shouldBlockNetworkData 是否加载网络内容
+     */
     public void blockNetworkData(boolean shouldBlockNetworkData) {
         getSettings().setBlockNetworkLoads(shouldBlockNetworkData);
     }

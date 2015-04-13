@@ -2,10 +2,9 @@ package com.kescoode.xmail.ui.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.fsck.k9.mail.MessagingException;
@@ -51,6 +50,14 @@ public class MailDetailFragment extends AppFragment<MailOperationActivity> {
             EmailDao emailDao = new EmailDao(getActivity());
             mMail = emailDao.selectMailsFromId(folder, id);
         }
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    protected void onActAttach(MailOperationActivity activity) {
+        ActionBar bar = activity.getSupportActionBar();
+        bar.setDisplayShowTitleEnabled(false);
+        bar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -58,6 +65,7 @@ public class MailDetailFragment extends AppFragment<MailOperationActivity> {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail_detail, container, false);
         ButterKnife.inject(this, view);
+
         return view;
     }
 
@@ -65,7 +73,7 @@ public class MailDetailFragment extends AppFragment<MailOperationActivity> {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            mWbMail.blockNetworkData(true);
+            mWbMail.blockNetworkData(false);
             mWbMail.loadLocalData(mMail.getTextForDisplay());
             if (Build.VERSION_CODES.KITKAT < Build.VERSION.SDK_INT) {
                 mWbMail.textAutoSize(true);
@@ -75,4 +83,20 @@ public class MailDetailFragment extends AppFragment<MailOperationActivity> {
             Log.e("nimabe", "hanima");
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_mail_detail_actions, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getAct().finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

@@ -7,6 +7,9 @@
 
     <string name="about">About Xmail</string>
     <string name="search">Search</string>
+    <string name="delete">Delete</string>
+    <string name="reply">Reply</string>
+    <string name="flag_as_new">Flag as new</string>
 
     <!-- 邮箱文件夹 -->
     <string name="inbox">INBOX</string>

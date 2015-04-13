@@ -1,8 +1,8 @@
 package com.kescoode.xmail.ui.activity.internal;
 
 import android.support.v7.app.ActionBarActivity;
-import com.kescoode.xmail.R;
 import com.kescoode.adk.view.Views;
+import com.kescoode.xmail.R;
 import com.kescoode.xmail.ui.widget.AppBar;
 import com.kescoode.xmail.ui.widget.XToolbar;
 
@@ -29,4 +29,5 @@ public abstract class AppActivity extends ActionBarActivity {
             appbar.setToolbar(toolbar);
         }
     }
+
 }

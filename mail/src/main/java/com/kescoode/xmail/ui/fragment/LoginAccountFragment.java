@@ -123,7 +123,6 @@ public class LoginAccountFragment extends AppFragment<AccountActivity> {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_login_actions, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
