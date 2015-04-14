@@ -4,7 +4,7 @@
         <attr name="logo_size" format="dimension"/>
         <attr name="logo_color" format="color"/>
         <attr name="logo_text" format="string"/>
-        <attr name="logo_textColor" format="color"/>
-        <attr name="logo_textSize" format="dimension"/>
+        <attr name="logo_text_color" format="color"/>
+        <attr name="logo_text_size" format="dimension"/>
     </declare-styleable>
 </resources>

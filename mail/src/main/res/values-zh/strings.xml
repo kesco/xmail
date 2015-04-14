@@ -10,4 +10,6 @@
     <string name="search">搜索</string>
     <string name="action_settings">设置</string>
     <string name="delete">删除</string>
+    <string name="reply"></string>
+    <string name="message_compose_quote_header_to">收件人:</string>
 </resources>

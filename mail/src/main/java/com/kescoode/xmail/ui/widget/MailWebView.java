@@ -42,8 +42,10 @@ public class MailWebView extends WebView {
     }
     
     private void initView(Context context) {
+        if (isInEditMode()) {
+            return;
+        }
         WebSettings webSettings = getSettings();
-
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setUseWideViewPort(true);

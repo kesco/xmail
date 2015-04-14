@@ -25,7 +25,7 @@
                 android:layout_marginLeft="@dimen/item_mail_list_horizontal_margin"
                 android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
                 app:logo_size="@dimen/item_mail_list_logo_size"
-                app:logo_textSize="@dimen/item_mail_list_logo_text_size"/>
+                app:logo_text_size="@dimen/item_mail_list_logo_text_size"/>
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                     android:maxLength="8"
                     android:maxLines="1"
                     android:ellipsize="end"
-                    android:textSize="@dimen/item_mail_list_title_text_size"
+                    android:textSize="@dimen/title_text_size"
                     android:textStyle="bold"/>
 
             <com.kescoode.xmail.ui.widget.LineDivider

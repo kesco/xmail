@@ -57,11 +57,11 @@ public class CircleLogo extends View {
             try {
                 logoColor = a.getColor(R.styleable.CircleLogoAttrs_logo_color,
                         getResources().getColor(R.color.adk_grey_blue));
-                logoTextColor = a.getColor(R.styleable.CircleLogoAttrs_logo_textColor,
+                logoTextColor = a.getColor(R.styleable.CircleLogoAttrs_logo_text_color,
                         getResources().getColor(R.color.adk_white));
                 logoSize = a.getDimensionPixelSize(R.styleable.CircleLogoAttrs_logo_size,
                         getResources().getDimensionPixelSize(R.dimen.default_circle_logo_size));
-                logoTextSize = a.getDimension(R.styleable.CircleLogoAttrs_logo_textSize,
+                logoTextSize = a.getDimension(R.styleable.CircleLogoAttrs_logo_text_size,
                         getResources().getDimension(R.dimen.default_circle_logo_text_size));
                 String defaultText = a.getString(R.styleable.CircleLogoAttrs_logo_text);
                 logoText = defaultText == null ?
