@@ -10,6 +10,14 @@
     <string name="search">搜索</string>
     <string name="action_settings">设置</string>
     <string name="delete">删除</string>
-    <string name="reply"></string>
+    <string name="reply">回复</string>
     <string name="message_compose_quote_header_to">收件人:</string>
+    <string name="attachment">附件</string>
+    <string name="send">发送</string>
+    <string name="message_compose_quote_header_send_date">发送时间:</string>
+    <string name="flag_as_new">标志为未读</string>
+    <string name="write_email">写邮件</string>
+    <string name="write_email_body">撰写电子邮件</string>
+    <string name="message_compose_quote_header_from">发件人:</string>
+    <string name="subject">主题</string>
 </resources>

@@ -3,26 +3,23 @@ package com.kescoode.xmail.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.R;
-import com.kescoode.xmail.domain.LocalAttachment;
-import com.kescoode.xmail.domain.MailBuilder;
 import com.kescoode.xmail.exception.XDynamicException;
 import com.kescoode.xmail.ui.activity.internal.MailConnActivity;
 import com.kescoode.xmail.ui.fragment.MailDetailFragment;
+import com.kescoode.xmail.ui.fragment.MailWriteFragment;
 
 public class MailOperationActivity extends MailConnActivity {
     private static final int OPERATION_ERROR = -1;
     public static final int OPERATION_WRITE = 0;
     public static final int OPERATION_DETAIL = 1;
 
-    public static void startMailOperation(Context context, int type) {
+    public static void startMailOperation4Write(Context context, long accountId) {
         Intent intent = new Intent(context, MailOperationActivity.class);
-        intent.putExtra("type", type);
+        intent.putExtra("type", OPERATION_WRITE);
+        intent.putExtra("account_id", accountId);
         context.startActivity(intent);
     }
 
@@ -43,7 +40,9 @@ public class MailOperationActivity extends MailConnActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment fg;
         if (type == OPERATION_DETAIL) {
-            fg = MailDetailFragment.newInstance(intent.getLongExtra("mail_id", -1));
+            fg = MailDetailFragment.newInstance(intent.getLongExtra("mail_id", -1L));
+        } else if (type == OPERATION_WRITE) {
+            fg = MailWriteFragment.newInstance(intent.getLongExtra("account_id", -1L));
         } else {
             throw new XDynamicException("The intent %d code is wrong", type);
         }

@@ -10,7 +10,7 @@ import android.view.View;
  */
 public abstract class AppFragment<T extends Activity> extends Fragment {
 
-    protected T getAct() {
+    protected final T getAct() {
         return (T) getActivity();
     }
 

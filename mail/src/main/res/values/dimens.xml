@@ -28,5 +28,9 @@
     <dimen name="item_mail_detail_toolbar_horizontal_margin">8dp</dimen>
     <dimen name="item_mail_detail_toolbar_vertical_margin">8dp</dimen>
 
+    <!--Mail Writer-->
+    <dimen name="preious_two_item_size">97dp</dimen>
+    <dimen name="item_mail_write_vertical_size">48dp</dimen>
+    <dimen name="item_mail_write_vertical_margin">8dp</dimen>
 
 </resources>

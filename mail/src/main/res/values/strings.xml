@@ -10,6 +10,9 @@
     <string name="delete">Delete</string>
     <string name="reply">Reply</string>
     <string name="flag_as_new">Flag as new</string>
+    <string name="attachment">Attachment</string>
+    <string name="send">Send</string>
+    <string name="subject">Subject</string>
 
     <!-- 邮箱文件夹 -->
     <string name="inbox">INBOX</string>
@@ -19,6 +22,10 @@
     <string name="hint_email">Email Address</string>
     <string name="hint_email_passwd">Email Password</string>
     <string name="login">Login</string>
+
+    <!--写邮件-->
+    <string name="write_email">Write Email</string>
+    <string name="write_email_body">Write Email</string>
 
     <!-- 登录测试 -->
     <string name="default_email">kesco915@foxmail.com</string>

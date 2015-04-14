@@ -129,7 +129,7 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
 
     @OnClick(R.id.fab_new)
     void onFabNewClick() {
-        MailOperationActivity.startMailOperation(this, MailOperationActivity.OPERATION_WRITE);
+        MailOperationActivity.startMailOperation4Write(this, currentAccount.getId());
     }
 
     @Override

@@ -30,6 +30,11 @@ import com.kescoode.xmail.ui.widget.MailWebView;
 
 import java.text.DateFormat;
 
+/**
+ * 邮件详情页面
+ *
+ * @author Kesco Lin
+ */
 public class MailDetailFragment extends AppFragment<MailOperationActivity> {
     @InjectView(R.id.tv_title)
     TextView tvTitle;
@@ -92,7 +97,6 @@ public class MailDetailFragment extends AppFragment<MailOperationActivity> {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail_detail, container, false);
         ButterKnife.inject(this, view);
-
         return view;
     }
 
