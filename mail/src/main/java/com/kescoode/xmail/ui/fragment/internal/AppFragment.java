@@ -14,13 +14,15 @@ public abstract class AppFragment<T extends Activity> extends Fragment {
         return (T) getActivity();
     }
 
-    protected void onActAttach(T activity) {
+    protected void onActAttachOnce(T activity) {
         /* Empty */
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onActAttach(getAct());
+        if (savedInstanceState == null) {
+            onActAttachOnce(getAct());
+        }
     }
 }

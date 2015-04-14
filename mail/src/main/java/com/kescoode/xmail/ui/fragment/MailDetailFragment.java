@@ -50,14 +50,14 @@ public class MailDetailFragment extends AppFragment<MailOperationActivity> {
             EmailDao emailDao = new EmailDao(getActivity());
             mMail = emailDao.selectMailsFromId(folder, id);
         }
-        setHasOptionsMenu(true);
     }
 
     @Override
-    protected void onActAttach(MailOperationActivity activity) {
+    protected void onActAttachOnce(MailOperationActivity activity) {
         ActionBar bar = activity.getSupportActionBar();
         bar.setDisplayShowTitleEnabled(false);
         bar.setDisplayHomeAsUpEnabled(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -98,5 +98,4 @@ public class MailDetailFragment extends AppFragment<MailOperationActivity> {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
