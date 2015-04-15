@@ -36,14 +36,18 @@ public class MailConnActivity extends AppActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unbindService(conn);
+        unbindService(getConn());
     }
 
     private void connService() {
         Intent intent = new Intent(this, MailService.class);
-        if (!bindService(intent, conn, BIND_AUTO_CREATE)) {
+        if (!bindService(intent, getConn(), BIND_AUTO_CREATE)) {
             throw new RuntimeException("Can not bind MailService.");
         }
+    }
+
+    protected ServiceConnection getConn() {
+        return conn;
     }
 
 }

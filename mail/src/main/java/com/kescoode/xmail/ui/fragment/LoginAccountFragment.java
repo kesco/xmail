@@ -104,8 +104,7 @@ public class LoginAccountFragment extends AppFragment<AccountActivity> {
             Views.delayExecuteOnUi(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(getAct(), HomeActivity.class);
-                    startActivity(intent);
+                    HomeActivity.start4Login(getAct());
                     getAct().finish();
                 }
             }, 1500);
