@@ -236,6 +236,11 @@ public class LocalEmail extends MimeMessage {
         return getInternalDate();
     }
 
+    @Override
+    public void setInternalDate(Date internalDate) {
+        super.setInternalDate(internalDate != null ? internalDate : new Date());
+    }
+
     public long getFolderId() {
         return getFolder().getId();
     }
