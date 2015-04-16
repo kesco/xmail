@@ -83,8 +83,10 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.ViewHo
             mTvTitle.setText(message.getSubject());
             Address[] addresses = message.getFrom();
             if (0 != addresses.length) {
+                String logoText = addresses[0].getPersonal() != null ?
+                        addresses[0].getPersonal() : addresses[0].getAddress();
                 clPeople.setLogoColor(MaterialColorPalette.randomColor());
-                clPeople.setLogoText(addresses[0].getPersonal().substring(0, 1));
+                clPeople.setLogoText(logoText.substring(0, 1));
             }
             mTvPreview.setText(message.getPreview());
             java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
