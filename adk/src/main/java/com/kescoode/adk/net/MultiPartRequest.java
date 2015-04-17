@@ -1,7 +1,6 @@
 package com.kescoode.adk.net;
 
 import android.webkit.MimeTypeMap;
-import com.google.common.io.Files;
 import com.kescoode.adk.net.volley.AuthFailureError;
 import com.kescoode.adk.net.volley.Response;
 import org.apache.commons.io.FileUtils;
