@@ -1,0 +1,8 @@
+dependencies:
+  pre:
+    - echo y | android update sdk --no-ui --all --filter "build-tools-22.0.1"
+test:
+  override:
+    - ./gradlew clean :mail:build
+  post:
+    - cp -R ./mail/build/outputs/apk/mail-debug.apk $CIRCLE_ARTIFACTS

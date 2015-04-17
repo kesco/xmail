@@ -7,5 +7,7 @@ android:
     - android-22
     - extra-android-m2repository
     - extra-android-support
-
 script: "./gradlew clean :mail:build"
+branches:
+  only:
+    - master
