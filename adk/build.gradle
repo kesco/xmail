@@ -36,6 +36,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
 }
 
 android.libraryVariants.all { variant ->

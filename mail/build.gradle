@@ -35,6 +35,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -43,7 +48,6 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
     }
-
 }
 
 dependencies {
