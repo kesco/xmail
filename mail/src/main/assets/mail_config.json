@@ -1,0 +1,86 @@
+[
+  {
+    "domain": "126.com",
+    "settings": [
+      {
+        "send": {
+          "type": "SMTP",
+          "server": "smtp.126.com",
+          "port": 465,
+          "security": "SSL_TLS_REQUIRED"
+        },
+        "receive": {
+          "type": "POP3",
+          "server": "pop.126.com",
+          "port": 995,
+          "security": "SSL_TLS_REQUIRED"
+        },
+        "use_suffix": false,
+        "default": 1
+      }
+    ]
+  },
+  {
+    "domain": "163.com",
+    "settings": [
+      {
+        "send": {
+          "type": "SMTP",
+          "server": "smtp.163.com",
+          "port": 465,
+          "security": "SSL_TLS_REQUIRED"
+        },
+        "receive": {
+          "type": "POP3",
+          "server": "pop.163.com",
+          "port": 995,
+          "security": "SSL_TLS_REQUIRED"
+        },
+        "use_suffix": false,
+        "default": 1
+      }
+    ]
+  },
+  {
+    "domain": "foxmail.com",
+    "settings": [
+      {
+        "send": {
+          "type": "SMTP",
+          "server": "smtp.qq.com",
+          "port": 465,
+          "security": "SSL_TLS_REQUIRED"
+        },
+        "receive": {
+          "type": "IMAP",
+          "server": "imap.qq.com",
+          "port": 993,
+          "security": "SSL_TLS_REQUIRED"
+        },
+        "use_suffix": true,
+        "default": 1
+      }
+    ]
+  },
+  {
+    "domain": "qq.com",
+    "settings": [
+      {
+        "send": {
+          "type": "SMTP",
+          "server": "smtp.qq.com",
+          "port": 465,
+          "security": "SSL_TLS_REQUIRED"
+        },
+        "receive": {
+          "type": "IMAP",
+          "server": "imap.qq.com",
+          "port": 993,
+          "security": "SSL_TLS_REQUIRED"
+        },
+        "use_suffix": true,
+        "default": 1
+      }
+    ]
+  }
+]

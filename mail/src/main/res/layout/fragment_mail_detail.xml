@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.kescoode.xmail.ui.fragment.MailDetailFragment">
+
+    <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_gray">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="@dimen/item_mail_detail_toolbar_vertical_margin"
+                    android:layout_marginLeft="@dimen/item_mail_detail_toolbar_horizontal_margin"
+                    android:layout_marginBottom="@dimen/item_mail_detail_toolbar_horizontal_margin"
+                    android:layout_toLeftOf="@+id/v_flag_star"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/title_text_size"/>
+            <!--给星标加入标记效果-->
+            <View
+                    android:id="@+id/v_flag_star"
+                    android:layout_width="@dimen/flag_star_size"
+                    android:layout_height="@dimen/flag_star_size"
+                    android:layout_marginLeft="@dimen/item_mail_detail_toolbar_vertical_margin"
+                    android:layout_marginRight="@dimen/item_mail_detail_toolbar_vertical_margin"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/action_start_outline"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <com.kescoode.xmail.ui.widget.LineDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_gray">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <com.kescoode.adk.ui.CircleLogo
+                    android:id="@+id/cl_people"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="@dimen/item_mail_detail_toolbar_vertical_margin"/>
+
+            <TextView
+                    android:id="@+id/tv_sender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/cl_people"
+                    android:layout_toRightOf="@+id/cl_people"
+                    android:layout_marginLeft="@dimen/item_mail_detail_toolbar_horizontal_margin"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/body_text_size"/>
+
+            <TextView
+                    android:id="@+id/tv_receivers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/tv_sender"
+                    android:layout_below="@+id/tv_sender"
+                    android:textSize="@dimen/body_text_size"/>
+
+            <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/tv_receivers"
+                    android:layout_below="@+id/tv_receivers"
+                    android:layout_marginBottom="@dimen/item_mail_detail_toolbar_vertical_margin"
+                    android:textSize="@dimen/body_text_size"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <com.kescoode.xmail.ui.widget.LineDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    <com.kescoode.xmail.ui.widget.MailWebView
+            android:id="@+id/wb_mail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+</LinearLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/item_mail_list_horizontal_margin"
+        android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
+        app:contentPadding="0dp"
+        app:cardCornerRadius="3dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="1dp">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minHeight="@dimen/item_mail_list_vertical_height"
+            android:background="@drawable/selector_mail_list_item">
+
+        <com.kescoode.adk.ui.CircleLogo
+                android:id="@+id/cl_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/item_mail_list_horizontal_margin"
+                android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
+                app:logo_size="@dimen/item_mail_list_logo_size"
+                app:logo_text_size="@dimen/item_mail_list_logo_text_size"/>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/cl_people">
+
+            <TextView
+                    android:id="@+id/tv_subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/item_mail_list_vertical_margin"
+                    android:layout_marginBottom="@dimen/item_mail_list_vertical_margin"
+                    android:maxLength="8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/title_text_size"
+                    android:textStyle="bold"/>
+
+            <com.kescoode.xmail.ui.widget.LineDivider
+                    android:id="@+id/ld_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/tv_subject"/>
+
+            <TextView
+                    android:id="@+id/tv_preview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/item_mail_list_vertical_margin"
+                    android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
+                    android:layout_below="@+id/ld_divider"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/item_mail_list_preview_text_size"/>
+
+            <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/item_mail_list_vertical_margin"
+                    android:layout_marginRight="@dimen/item_mail_list_horizontal_margin"
+                    android:layout_above="@+id/ld_divider"
+                    android:layout_alignParentRight="true"
+                    android:text="时间"
+                    android:textSize="@dimen/item_mail_list_date_text_size"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

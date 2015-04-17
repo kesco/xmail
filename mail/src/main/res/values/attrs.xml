@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AppBarAttrs">
+        <attr name="toolbar_background" format="color"/>
+        <attr name="toolbar_layout" format="reference"/>
+        <attr name="toolbar_shadow_height" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="AppBarTheme">
+        <attr name="appBarStyle" format="reference"/>
+    </declare-styleable>
+</resources>

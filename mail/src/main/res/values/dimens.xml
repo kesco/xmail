@@ -1,0 +1,36 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- FloatingActionButton -->
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--Text Size-->
+    <dimen name="title_text_size">16sp</dimen>
+    <dimen name="body_text_size">14sp</dimen>
+
+    <!--ToolBar-->
+    <dimen name="toolbar_shadow_height">4dp</dimen>
+
+    <!-- Mail List Item -->
+    <dimen name="item_mail_list_divider">8dp</dimen>
+    <dimen name="item_mail_list_horizontal_margin">8dp</dimen>
+    <dimen name="item_mail_list_vertical_margin">4dp</dimen>
+    <dimen name="item_mail_list_vertical_height">68dp</dimen>
+    <dimen name="item_mail_list_logo_size">48dp</dimen>
+    <dimen name="item_mail_list_logo_text_size">25sp</dimen>
+    <dimen name="item_mail_list_date_text_size">10sp</dimen>
+    <dimen name="item_mail_list_preview_text_size">12sp</dimen>
+
+    <!--Mail Detail-->
+    <dimen name="flag_star_size">24dp</dimen>
+    <dimen name="item_mail_detail_toolbar_horizontal_margin">8dp</dimen>
+    <dimen name="item_mail_detail_toolbar_vertical_margin">8dp</dimen>
+
+    <!--Mail Writer-->
+    <dimen name="preious_two_item_size">97dp</dimen>
+    <dimen name="item_mail_write_vertical_size">48dp</dimen>
+    <dimen name="item_mail_write_vertical_margin">8dp</dimen>
+
+</resources>

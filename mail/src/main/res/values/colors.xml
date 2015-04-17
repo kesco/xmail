@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_bar_shadow_start">#40000000</color>
+    <color name="app_bar_shadow_end">#00000000</color>
+    
+    <color name="transparent">@android:color/transparent</color>
+
+    <color name="white">@android:color/white</color>
+    <color name="white_2">#F6F6EF</color>
+    <color name="white_gray">#fafafa</color>
+
+    <color name="blue">#448AFF</color>
+    <color name="blue_sky_1">#03A9F4</color>
+    <color name="blue_sky_2">#0288D1</color>
+    <color name="blue_sky_3">#ff00ddff</color>
+
+    <color name="orange_light">#ffffbb33</color>
+    <color name="orange_dark">#ffff8800</color>
+
+    <color name="purple">#ffaa66cc</color>
+
+    <color name="red_dark">#ffcc0000</color>
+    <color name="red_light">#ffff4444</color>
+
+    <color name="green_light">#ff99cc00</color>
+
+    <color name="gray">#eeeeee</color>
+    <color name="gray_white">#bdbdbd</color>
+
+</resources>

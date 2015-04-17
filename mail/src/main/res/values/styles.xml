@@ -1,0 +1,17 @@
+<resources>
+
+    <style name="MailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/blue_sky_1</item>
+        <item name="colorPrimaryDark">@color/blue_sky_2</item>
+        <item name="colorAccent">@color/blue</item>
+
+        <item name="appBarStyle">@style/Widget.MailTheme.AppBar</item>
+    </style>
+
+    <style name="Widget.MailTheme.AppBar" parent="Widget.AppCompat.Toolbar">
+        <item name="toolbar_background">?attr/colorPrimary</item>
+        <item name="toolbar_layout">@layout/toolbar</item>
+        <item name="toolbar_shadow_height">@dimen/toolbar_shadow_height</item>
+    </style>
+
+</resources>
