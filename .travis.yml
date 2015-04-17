@@ -1,5 +1,4 @@
 language: android
-jdk: oraclejdk8
 android:
   components:
     - platform-tools
@@ -9,4 +8,4 @@ android:
     - extra-android-m2repository
     - extra-android-support
 
-script: "./gradlew clean build"
+script: "./gradlew clean dependencies"
