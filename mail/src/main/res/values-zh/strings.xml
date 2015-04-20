@@ -20,4 +20,5 @@
     <string name="write_email_body">撰写电子邮件</string>
     <string name="message_compose_quote_header_from">发件人:</string>
     <string name="subject">主题</string>
+    <string name="about_app">邮我是一个基于K-9开源项目开发的第三方客户端</string>
 </resources>

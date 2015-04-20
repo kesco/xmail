@@ -184,12 +184,12 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_about:
-                // TODO: 加入关于提示
-                break;
             case R.id.action_search:
                 // TODO: 加入搜索Action Mode
                 break;
+            case R.id.action_about:
+                InformationActivity.startAbout(this);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -27,6 +27,9 @@
     <string name="write_email">Write Email</string>
     <string name="write_email_body">Write Email</string>
 
+    <!--关于App-->
+    <string name="about_app">Xmail is a third-party mail client based on K-9</string>
+
     <!-- 登录测试 -->
     <string name="default_email">kesco915@foxmail.com</string>
     <string name="default_email_passwd">a1991915</string>
@@ -42,5 +45,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_mail_operation">MailOperationActivity</string>
+    <string name="title_activity_information">InformationActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

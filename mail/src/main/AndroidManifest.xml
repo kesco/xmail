@@ -3,8 +3,8 @@
     package="com.kescoode.xmail" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".AppCtx"
@@ -54,6 +54,10 @@
         <activity
             android:name=".ui.activity.MailOperationActivity"
             android:label="@string/title_activity_mail_operation" >
+        </activity>
+        <activity
+            android:name=".ui.activity.InformationActivity"
+            android:label="@string/title_activity_information" >
         </activity>
     </application>
 

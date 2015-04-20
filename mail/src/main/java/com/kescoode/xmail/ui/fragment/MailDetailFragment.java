@@ -24,6 +24,7 @@ import com.kescoode.xmail.db.EmailDao;
 import com.kescoode.xmail.db.FolderDao;
 import com.kescoode.xmail.domain.LocalEmail;
 import com.kescoode.xmail.domain.LocalFolder;
+import com.kescoode.xmail.ui.activity.InformationActivity;
 import com.kescoode.xmail.ui.activity.MailOperationActivity;
 import com.kescoode.xmail.ui.fragment.internal.AppFragment;
 import com.kescoode.xmail.ui.widget.MailWebView;
@@ -163,6 +164,9 @@ public class MailDetailFragment extends AppFragment<MailOperationActivity> {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getAct().finish();
+                return true;
+            case R.id.action_about:
+                InformationActivity.startAbout(getAct());
                 return true;
         }
         return super.onOptionsItemSelected(item);

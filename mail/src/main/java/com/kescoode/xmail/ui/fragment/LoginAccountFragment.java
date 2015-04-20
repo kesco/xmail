@@ -1,10 +1,6 @@
 package com.kescoode.xmail.ui.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.view.*;
 import android.widget.EditText;
@@ -18,6 +14,7 @@ import com.kescoode.xmail.R;
 import com.kescoode.xmail.event.SettingCheckEvent;
 import com.kescoode.xmail.ui.activity.AccountActivity;
 import com.kescoode.xmail.ui.activity.HomeActivity;
+import com.kescoode.xmail.ui.activity.InformationActivity;
 import com.kescoode.xmail.ui.fragment.internal.AppFragment;
 import de.greenrobot.event.EventBus;
 
@@ -128,8 +125,8 @@ public class LoginAccountFragment extends AppFragment<AccountActivity> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
-                // TODO: 加入App说明
-                break;
+                InformationActivity.startAbout(getAct());
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

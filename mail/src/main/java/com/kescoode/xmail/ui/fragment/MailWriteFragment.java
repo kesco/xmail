@@ -14,6 +14,7 @@ import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.domain.Account;
 import com.kescoode.xmail.domain.MailBuilder;
 import com.kescoode.xmail.exception.XDynamicException;
+import com.kescoode.xmail.ui.activity.InformationActivity;
 import com.kescoode.xmail.ui.activity.MailOperationActivity;
 import com.kescoode.xmail.ui.fragment.internal.AppFragment;
 
@@ -98,6 +99,9 @@ public class MailWriteFragment extends AppFragment<MailOperationActivity> {
             case R.id.action_send:
                 sendMail();
                 getAct().finish();
+                return true;
+            case R.id.action_about:
+                InformationActivity.startAbout(getAct());
                 return true;
         }
         return super.onOptionsItemSelected(item);

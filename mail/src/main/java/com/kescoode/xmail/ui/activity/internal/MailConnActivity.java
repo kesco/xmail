@@ -12,7 +12,7 @@ import com.kescoode.xmail.service.aidl.IRemoteMailService;
  *
  * @author Kesco Lin
  */
-public class MailConnActivity extends AppActivity {
+public abstract class MailConnActivity extends AppActivity {
 
     public IRemoteMailService mailService;
     private final ServiceConnection conn = new ServiceConnection() {
