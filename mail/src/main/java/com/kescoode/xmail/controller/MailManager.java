@@ -41,7 +41,7 @@ public class MailManager {
         if (SINGLETON == null) {
             synchronized (MailManager.class) {
                 if (SINGLETON == null) {
-                    SINGLETON = new MailManager(context);
+                    SINGLETON = new MailManager(context.getApplicationContext());
                 }
             }
         }

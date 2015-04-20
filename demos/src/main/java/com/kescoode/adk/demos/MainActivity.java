@@ -14,6 +14,8 @@ import com.kescoode.adk.view.Views;
 public class MainActivity extends ActionBarActivity {
     private CircleLogo clLogo;
 
+    private String strTest = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +24,13 @@ public class MainActivity extends ActionBarActivity {
         RecyclerView rv = Views.findById(this, R.id.rv_demos);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new DemosAdapter(this));
+
+        findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                strTest.length();
+            }
+        });
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Kesco Lin
  */
 public class Logger {
-
+    protected static final String LOG_TAG = Logger.class.getCanonicalName();
     private static List<LogTrunk> trunks = new CopyOnWriteArrayList<>();
 
     private Logger() {

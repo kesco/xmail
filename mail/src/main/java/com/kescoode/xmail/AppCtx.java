@@ -4,6 +4,7 @@ import android.app.Application;
 import com.fsck.k9.mail.internet.BinaryTempFileBody;
 import com.fsck.k9.mail.ssl.LocalKeyStore;
 import com.kescoode.adk.log.CommonTrunk;
+import com.kescoode.adk.log.DefaultCrashFileTrunk;
 import com.kescoode.adk.log.Logger;
 import com.kescoode.xmail.controller.MailManager;
 
@@ -22,6 +23,8 @@ public class AppCtx extends Application {
 
         MailManager manager = MailManager.getSingleTon(this);
         manager.init();
+        /* 捕捉Uncaught Exception到本地文件上 */
+        Logger.appendTrunk(new DefaultCrashFileTrunk(this));
 
         // TODO: K9的临时缓存，但是目录路径和多进程相关的影响到时候要评估下
         BinaryTempFileBody.setTempDirectory(getCacheDir());
