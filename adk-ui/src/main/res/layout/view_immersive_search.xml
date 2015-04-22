@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.codetail.widget.RevealFrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <RelativeLayout
+            android:id="@+id/rl_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/search_bar_padding"
+            android:paddingRight="@dimen/search_bar_padding"
+            android:background="@drawable/shape_search_bar_background"
+            android:layout_gravity="center_vertical">
+
+        <ImageView
+                android:id="@+id/iv_arrow_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/search_bar_icon_margin"
+                android:padding="@dimen/search_bar_icon_padding"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/action_arrow_back_grey"
+                android:tint="@color/search_bar_icon_tint"/>
+
+        <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/material_actionbar_size_minimal"
+                android:layout_toRightOf="@+id/iv_arrow_back"
+                android:layout_toLeftOf="@+id/iv_close"
+                android:layout_marginLeft="@dimen/search_bar_edit_margin"
+                android:background="@color/transparent"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textSize="@dimen/search_bar_edit_text_size"/>
+
+        <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/search_bar_icon_margin"
+                android:padding="@dimen/search_bar_icon_padding"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/action_close_grey"
+                android:tint="@color/search_bar_icon_tint"/>
+    </RelativeLayout>
+</io.codetail.widget.RevealFrameLayout>

@@ -12,10 +12,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.kescoode.adk.log.Logger;
+import com.kescoode.adk.ui.ImmersiveSearchBar;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.domain.Account;
@@ -41,6 +43,9 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
 
     @InjectView(R.id.fab_new)
     FloatingActionButton fabNew;
+
+    @InjectView(R.id.search_bar)
+    ImmersiveSearchBar isbSearch;
 
     private EventBus bus = EventBus.getDefault();
     private final ServiceConnection conn = new ServiceConnection() {
@@ -120,6 +125,15 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
         adapter.setDataSet(currentFolder);
 
         fabNew.attachToRecyclerView(rcVMails);
+
+        isbSearch.setBackListener(new ImmersiveSearchBar.ActionBackListener() {
+            @Override
+            public void back() {
+                isbSearch.showKeyboard(false);
+                isbSearch.setVisibility(View.GONE);
+            }
+        });
+        isbSearch.setHint(R.string.search_email);
     }
 
     private void firstRefreshInit() {
@@ -185,8 +199,8 @@ public class HomeActivity extends MailConnActivity implements SwipeRefreshLayout
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                // TODO: 加入搜索Action Mode
-                break;
+                isbSearch.appear(this);
+                return true;
             case R.id.action_about:
                 InformationActivity.startAbout(this);
                 return true;

@@ -1,25 +1,29 @@
 package com.kescoode.adk.demos;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import com.kescoode.adk.ui.CircleLogo;
+import com.kescoode.adk.ui.ImmersiveSearchBar;
 import com.kescoode.adk.view.Views;
 
 
 public class MainActivity extends ActionBarActivity {
+    private ImmersiveSearchBar isbSearch;
     private CircleLogo clLogo;
-
-    private String strTest = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        isbSearch = Views.findById(this, R.id.isb_search);
+//        setSupportActionBar(isbSearch);
+        isbSearch.setVisibility(View.GONE);
 
         RecyclerView rv = Views.findById(this, R.id.rv_demos);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -28,10 +32,12 @@ public class MainActivity extends ActionBarActivity {
         findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                strTest.length();
+                isbSearch.appear(MainActivity.this);
             }
         });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

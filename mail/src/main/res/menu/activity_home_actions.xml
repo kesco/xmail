@@ -7,7 +7,7 @@
             android:title="@string/search"
             android:icon="@drawable/selector_action_search"
             android:orderInCategory="100"
-            app:showAsAction="always"/>
+            app:showAsAction="ifRoom"/>
 
     <item
             android:id="@+id/action_about"

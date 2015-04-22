@@ -47,6 +47,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-annotations:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.0.0'
+
+    compile 'com.nineoldandroids:library:2.4.0'                 /* 属性动画兼容库 */
 
     provided project(':adk')
 }

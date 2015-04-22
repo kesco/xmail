@@ -7,4 +7,8 @@
         <attr name="logo_text_color" format="color"/>
         <attr name="logo_text_size" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="ImmersiveSearchBarAttrs">
+        <attr name="hint" format="string"/>
+    </declare-styleable>
 </resources>

@@ -2,4 +2,13 @@
 <resources>
     <dimen name="default_circle_logo_size">40dp</dimen>
     <dimen name="default_circle_logo_text_size">20sp</dimen>
+
+    <dimen name="material_actionbar_size_minimal">56dp</dimen>
+
+    <!--搜索栏-->
+    <dimen name="search_bar_padding">8dp</dimen>
+    <dimen name="search_bar_icon_margin">4dp</dimen>
+    <dimen name="search_bar_icon_padding">2dp</dimen>
+    <dimen name="search_bar_edit_margin">24dp</dimen>
+    <dimen name="search_bar_edit_text_size">16sp</dimen>
 </resources>

@@ -39,5 +39,4 @@ public class AppCtx extends Application {
             Logger.appendTrunk(new CommonTrunk());
         }
     }
-
 }

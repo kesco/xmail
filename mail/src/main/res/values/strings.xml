@@ -27,6 +27,9 @@
     <string name="write_email">Write Email</string>
     <string name="write_email_body">Write Email</string>
 
+    <!--主页面-->
+    <string name="search_email">Search E-mails</string>
+
     <!--关于App-->
     <string name="about_app">Xmail is a third-party mail client based on K-9</string>
 
