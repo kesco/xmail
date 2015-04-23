@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.kescoode.adk.device.KeyBoard;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.domain.Account;
@@ -81,8 +82,19 @@ public class MailWriteFragment extends AppFragment<MailOperationActivity> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         tvSender.setText(account.getUserEmail());
+        etTo.requestFocus();
+        KeyBoard.showSoftKeyBoardForce(getAct());
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -94,6 +106,7 @@ public class MailWriteFragment extends AppFragment<MailOperationActivity> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                KeyBoard.hideSoftKeyBoardForce(getAct(), etTo);
                 getAct().finish();
                 return true;
             case R.id.action_send:
@@ -120,7 +133,7 @@ public class MailWriteFragment extends AppFragment<MailOperationActivity> {
                 .setSubject(subject)
                 .setContent(body);
         try {
-            getAct().mailService.sendMail(account.getId(),builder);
+            getAct().mailService.sendMail(account.getId(), builder);
         } catch (RemoteException e) {
             e.printStackTrace();
             // TODO: 加入错误处理

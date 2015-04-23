@@ -25,6 +25,16 @@ public class KeyBoard {
     }
 
     /**
+     * 强制弹出软键盘
+     *
+     * @param context 上下文
+     */
+    public static void showSoftKeyBoardForce(Context context) {
+        InputMethodManager im = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        im.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    /**
      * 隐藏软键盘
      *
      * @param context 上下文
@@ -34,5 +44,17 @@ public class KeyBoard {
         view.clearFocus();
         InputMethodManager im = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         im.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    /**
+     * 强制隐藏软键盘
+     *
+     * @param context 上下文
+     * @param view    获取焦点的视图
+     */
+    public static void hideSoftKeyBoardForce(Context context, View view) {
+        view.clearFocus();
+        InputMethodManager im = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        im.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
