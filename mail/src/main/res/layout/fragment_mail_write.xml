@@ -1,103 +1,111 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/white_gray"
-              tools:context="com.kescoode.xmail.ui.fragment.MailWriteFragment">
-
-    <RelativeLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/preious_two_item_size">
+            android:layout_height="match_parent"
+            android:background="@color/white_gray"
+            tools:context="com.kescoode.xmail.ui.fragment.MailWriteFragment">
 
-        <TextView
-                android:id="@+id/tv_sender_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/item_mail_write_vertical_margin"
-                android:layout_above="@+id/ld_divider"
-                android:layout_alignParentLeft="true"
-                android:textSize="@dimen/title_text_size"
-                android:textStyle="bold"
-                android:text="@string/message_compose_quote_header_from"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <TextView
-                android:id="@+id/tv_sender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_sender_label"
-                android:layout_alignTop="@id/tv_sender_label"/>
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/preious_two_item_size">
+
+            <TextView
+                    android:id="@+id/tv_sender_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/item_mail_write_vertical_margin"
+                    android:layout_above="@+id/ld_divider"
+                    android:layout_alignParentLeft="true"
+                    android:textSize="@dimen/title_text_size"
+                    android:textStyle="bold"
+                    android:text="@string/message_compose_quote_header_from"/>
+
+            <TextView
+                    android:id="@+id/tv_sender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_sender_label"
+                    android:layout_alignTop="@id/tv_sender_label"/>
+
+            <com.kescoode.xmail.ui.widget.LineDivider
+                    android:id="@+id/ld_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"/>
+
+            <TextView
+                    android:id="@+id/tv_to_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/item_mail_write_vertical_margin"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="@dimen/title_text_size"
+                    android:textStyle="bold"
+                    android:text="@string/message_compose_quote_header_to"/>
+
+            <EditText
+                    android:id="@+id/et_to"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_to_label"
+                    android:layout_alignLeft="@+id/tv_sender"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="@dimen/item_mail_write_vertical_margin"
+                    android:layout_marginRight="@dimen/item_mail_write_vertical_margin"
+                    android:layout_marginBottom="@dimen/item_mail_write_vertical_margin"
+                    android:background="@color/transparent"
+                    android:singleLine="true"
+                    android:textSize="@dimen/title_text_size"/>
+        </RelativeLayout>
 
         <com.kescoode.xmail.ui.widget.LineDivider
-                android:id="@+id/ld_divider"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_centerVertical="true"/>
+                android:layout_height="1dp"/>
 
-        <TextView
-                android:id="@+id/tv_to_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/item_mail_write_vertical_margin"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:textSize="@dimen/title_text_size"
-                android:textStyle="bold"
-                android:text="@string/message_compose_quote_header_to"/>
-
-        <EditText
-                android:id="@+id/et_to"
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_to_label"
-                android:layout_alignLeft="@+id/tv_sender"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="@dimen/item_mail_write_vertical_margin"
-                android:layout_marginRight="@dimen/item_mail_write_vertical_margin"
-                android:layout_marginBottom="@dimen/item_mail_write_vertical_margin"
-                android:background="@color/transparent"
-                android:singleLine="true"
-                android:textSize="@dimen/title_text_size"/>
-    </RelativeLayout>
+                android:layout_height="@dimen/item_mail_write_vertical_size">
 
-    <com.kescoode.xmail.ui.widget.LineDivider
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            <EditText
+                    android:id="@+id/et_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/item_mail_write_vertical_margin"
+                    android:layout_gravity="bottom"
+                    android:background="@color/transparent"
+                    android:singleLine="true"
+                    android:textSize="@dimen/title_text_size"
+                    android:hint="@string/subject"/>
+        </FrameLayout>
 
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_mail_write_vertical_size">
-
-        <EditText
-                android:id="@+id/et_subject"
+        <com.kescoode.xmail.ui.widget.LineDivider
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/item_mail_write_vertical_margin"
-                android:layout_gravity="bottom"
-                android:background="@color/transparent"
-                android:singleLine="true"
-                android:textSize="@dimen/title_text_size"
-                android:hint="@string/subject"/>
-    </FrameLayout>
+                android:layout_height="1dp"/>
 
-    <com.kescoode.xmail.ui.widget.LineDivider
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <EditText
-                android:id="@+id/et_body"
+        <LinearLayout
+                android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/item_mail_write_vertical_margin"
-                android:layout_marginRight="@dimen/item_mail_write_vertical_margin"
-                android:layout_marginTop="@dimen/item_mail_write_vertical_margin"
-                android:gravity="top"
-                android:background="@color/transparent"
-                android:textSize="@dimen/body_text_size"
-                android:hint="@string/write_email_body"/>
-    </FrameLayout>
-</LinearLayout>
+                android:orientation="vertical">
+
+            <EditText
+                    android:id="@+id/et_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/item_mail_write_vertical_margin"
+                    android:layout_marginRight="@dimen/item_mail_write_vertical_margin"
+                    android:layout_marginTop="@dimen/item_mail_write_vertical_margin"
+                    android:layout_marginBottom="@dimen/item_mail_attachment_bottom_margin"
+                    android:gravity="top"
+                    android:background="@color/transparent"
+                    android:textSize="@dimen/body_text_size"
+                    android:hint="@string/write_email_body"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

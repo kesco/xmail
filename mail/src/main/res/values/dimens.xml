@@ -32,5 +32,9 @@
     <dimen name="preious_two_item_size">97dp</dimen>
     <dimen name="item_mail_write_vertical_size">48dp</dimen>
     <dimen name="item_mail_write_vertical_margin">8dp</dimen>
+    <dimen name="item_mail_attachment_bottom_margin">56dp</dimen>
+    
+    <dimen name="item_mail_attachment_height">48dp</dimen>
+    <dimen name="item_mail_attachment_horizontal_right_margin">32dp</dimen>
 
 </resources>

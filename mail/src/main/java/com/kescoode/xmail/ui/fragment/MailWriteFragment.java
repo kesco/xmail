@@ -1,15 +1,20 @@
 package com.kescoode.xmail.ui.fragment;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.kescoode.adk.device.KeyBoard;
+import com.kescoode.adk.view.Views;
 import com.kescoode.xmail.R;
 import com.kescoode.xmail.controller.MailManager;
 import com.kescoode.xmail.domain.Account;
@@ -19,12 +24,18 @@ import com.kescoode.xmail.ui.activity.InformationActivity;
 import com.kescoode.xmail.ui.activity.MailOperationActivity;
 import com.kescoode.xmail.ui.fragment.internal.AppFragment;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 撰写邮件页面
  *
  * @author Kesco Lin
  */
 public class MailWriteFragment extends AppFragment<MailOperationActivity> {
+    private static final int REQUEST_CODE_FILE = 1345;
+
     @InjectView(R.id.tv_sender)
     TextView tvSender;
 
@@ -37,7 +48,11 @@ public class MailWriteFragment extends AppFragment<MailOperationActivity> {
     @InjectView(R.id.et_body)
     EditText etBody;
 
+    @InjectView(R.id.ll_content)
+    LinearLayout llContent;
+
     private Account account;
+    private List<AttachmentHolder> attachHolders = new ArrayList<>();
 
     public static MailWriteFragment newInstance(long accountId) {
         MailWriteFragment fragment = new MailWriteFragment();
@@ -107,17 +122,54 @@ public class MailWriteFragment extends AppFragment<MailOperationActivity> {
         switch (item.getItemId()) {
             case android.R.id.home:
                 KeyBoard.hideSoftKeyBoardForce(getAct(), etTo);
-                getAct().finish();
+                finish();
+                return true;
+            case R.id.action_attachment:
+                openFileBroswer();
                 return true;
             case R.id.action_send:
                 sendMail();
-                getAct().finish();
+                finish();
                 return true;
             case R.id.action_about:
                 InformationActivity.startAbout(getAct());
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openFileBroswer() {
+        KeyBoard.hideSoftKeyBoardForce(getAct(), etTo);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("gagt/sdf");
+        try {
+            startActivityForResult(intent, REQUEST_CODE_FILE);
+        } catch (ActivityNotFoundException e) {
+            // TODO: 添加自己的文件处理器
+        }
+    }
+
+    private void addAttachment(String path) {
+        View attachment = LayoutInflater.from(getAct()).inflate(R.layout.item_attachment_list, null);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(getResources().getDimensionPixelSize(R.dimen.item_mail_write_vertical_margin), 0,
+                getResources().getDimensionPixelSize(R.dimen.item_mail_attachment_horizontal_right_margin), 0);
+        attachment.setLayoutParams(layoutParams);
+        TextView tv = Views.findById(attachment, R.id.tv_attachment);
+        File file = new File(path);
+        tv.setText(file.getName());
+        AttachmentHolder holder = new AttachmentHolder(attachment, path);
+        attachment.setOnClickListener(holder);
+        attachHolders.add(holder);
+        llContent.addView(attachment);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_FILE && resultCode == Activity.RESULT_OK) {
+            addAttachment(data.getData().getPath());
+        }
     }
 
     private void sendMail() {
@@ -132,11 +184,37 @@ public class MailWriteFragment extends AppFragment<MailOperationActivity> {
         builder.setToList(to)
                 .setSubject(subject)
                 .setContent(body);
+        if (attachHolders.size() != 0) {
+            for (AttachmentHolder holder : attachHolders) {
+                builder.addAttachment(holder.path);
+            }
+        }
         try {
             getAct().mailService.sendMail(account.getId(), builder);
         } catch (RemoteException e) {
             e.printStackTrace();
             // TODO: 加入错误处理
+        }
+    }
+
+    private void finish() {
+        KeyBoard.hideSoftKeyBoardForce(getAct(), etTo);
+        getAct().finish();
+    }
+
+    private class AttachmentHolder implements View.OnClickListener {
+        private View attach;
+        protected final String path;
+
+        public AttachmentHolder(View attach, String path) {
+            this.attach = attach;
+            this.path = path;
+        }
+
+        @Override
+        public void onClick(View v) {
+            attachHolders.remove(this);
+            llContent.removeView(attach);
         }
     }
 }
